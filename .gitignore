@@ -14,5 +14,11 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+# Output of error capture
+*.err
+
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# often output of test routines
+*.txt
