@@ -2,20 +2,7 @@ package accumulator
 
 import (
 	"crypto/sha256"
-	"fmt"
 	"sync"
-)
-
-// In this test package for the testing of the limits of how much data can be collected
-// sorted, and put into Merkle trees,
-
-package main
-
-import (
-"crypto/sha256"
-"fmt"
-"math/rand"
-"time"
 )
 
 type HashStream chan []byte
@@ -23,26 +10,27 @@ type HashStream chan []byte
 type Chain struct {
 	HashList [][]byte
 	MR       [][]byte
-	txs      HashStream
-	mux      sync.Mutex
+	Txs      HashStream
+	Mux      sync.Mutex
+	Count    int64
 }
 
 func (c *Chain) Run(txs HashStream) {
-	c.mux.Lock()
-	c.txs = txs
+	c.Txs = txs
 	for {
 		c.AddToMR(<-txs)
 	}
-	c.mux.Unlock()
 }
 
 // Add a Hash to a building Merkle Tree
 func (c *Chain) AddToMR(hash []byte) {
+	c.Mux.Lock()
 	c.addToMR2(0, hash)
+	c.Count++
+	c.Mux.Unlock()
 }
 
-func (c *Chain) addToMR2(start int, hash []byte) {
-	i := start
+func (c *Chain) addToMR2(i int, hash []byte) {
 	if len(c.MR) == i {
 		c.MR = append(c.MR, hash)
 		return
@@ -59,7 +47,6 @@ func (c *Chain) addToMR2(start int, hash []byte) {
 }
 
 func (c *Chain) CloseMR() []byte {
-	c.mux.Lock()
 	lmr := len(c.MR)
 	var bits uint
 	for lmr > 0 {
@@ -75,11 +62,8 @@ func (c *Chain) CloseMR() []byte {
 		return c.MR[lmr-1]
 	}
 	po2 <<= 1
-	fmt.Println("length of MR", len(c.MR))
-	fmt.Println("Power of 2", po2)
 	for len(c.MR)*2 < po2 {
 		c.AddToMR(c.MR[len(c.MR)-1])
 	}
 	return c.MR[len(c.MR)-1]
-	c.mux.Unlock()
 }

@@ -4,12 +4,12 @@
 package main
 
 import (
-	"crypto/sha256"
 	"fmt"
-	"math/rand"
 	"time"
 
 	"github.com/PaulSnow/LoadTest/accumulator"
+	"github.com/PaulSnow/LoadTest/txGenerators"
+	"github.com/dustin/go-humanize"
 )
 
 func ShowTime() {
@@ -28,56 +28,31 @@ var txs chan []byte
 
 func main() {
 
-	txs = make(chan []byte, 1000000)
+	router1 := new(accumulator.Router)
+	router2 := new(accumulator.Router)
+	router3 := new(accumulator.Router)
+	router1.Init()
+	router2.Init()
+	router3.Init()
 
-	Seconds := 30
-
-	chain := new(accumulator.Chain)
+	Seconds := 60
 
 	go ShowTime()
-	go chain.Run(txs)
-	go genTransactions(txs)
-	go genTransactions(txs)
-	go genTransactions(txs)
+	go txGenerators.GenSimpleTokenTxs(*router1)
+	go txGenerators.GenSimpleTokenTxs(*router2)
+	go txGenerators.GenSimpleTokenTxs(*router3)
 
-	end := time.Now().Add(time.Duration(Seconds) * time.Second)
-	cnt := 0
-	for time.Now().Before(end) {
-		cnt += 100
-	}
-	fmt.Printf("\nHashes: %d %4.2f h/s \n", cnt, float64(cnt)/float64(Seconds))
-	chain.CloseMR()
-	fmt.Printf("\nDone:   %d %4.2f h/s \n", cnt, float64(cnt)/float64(Seconds))
-}
+	time.Sleep(time.Duration(Seconds) * time.Second)
 
-func genTransactions(txs accumulator.HashStream) {
-	// Addresses transacting
-	// An initial balance
-	addresses := append([]float64{}, 1000000)
-
-	for {
-		// pick two addresses
-		SAdr := rand.Int() % len(addresses)
-		DAdr := rand.Int() % len(addresses)
-		if (len(addresses) < 1000 || rand.Float32() < .1) && len(addresses) < 50000 {
-			SAdr = 0
-			DAdr = len(addresses)
-			addresses = append(addresses, 0)
-		}
-		// Make transfers to different addresses
-		if SAdr == DAdr {
-			continue
-		}
-
-		amt := addresses[SAdr] * (rand.Float64() + 1) / 10
-
-		tx := fmt.Sprintf("src: %d  dest: %d  amt: %f ", SAdr, DAdr, amt)
-
-		addresses[SAdr] -= amt
-		addresses[DAdr] += amt
-
-		h := sha256.Sum256([]byte(tx))
-		txs <- h[:]
-	}
-
+	chains1, count1, pending1 := router1.CloseAll()
+	chains2, count2, pending2 := router2.CloseAll()
+	chains3, count3, pending3 := router3.CloseAll()
+	chains := chains1 + chains2 + chains3
+	count := count1 + count2 + count3
+	pending := pending1 + pending2 + pending3
+	fmt.Printf("\nHashes: %s %s h/s chains: %s pending: %s\n",
+		humanize.Comma(int64(count)),
+		humanize.Comma(count/int64(Seconds)),
+		humanize.Comma(chains),
+		humanize.Comma(pending))
 }
