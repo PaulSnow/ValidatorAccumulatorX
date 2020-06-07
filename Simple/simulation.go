@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/PaulSnow/LoadTest/accumulator"
-	"github.com/PaulSnow/LoadTest/txGenerators"
+	"github.com/PaulSnow/LoadTest/Simple/accumulator"
+	"github.com/PaulSnow/LoadTest/Simple/txGenerators"
 	"github.com/dustin/go-humanize"
 )
 

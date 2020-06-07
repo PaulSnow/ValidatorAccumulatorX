@@ -1,4 +1,4 @@
-module github.com/PaulSnow/LoadTest
+module github.com/PaulSnow/LoadTest/Simple
 
 go 1.13
 

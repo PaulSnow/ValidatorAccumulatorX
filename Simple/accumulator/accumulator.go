@@ -44,7 +44,7 @@ func (c *Chain) addToMR2(i int, hash []byte) {
 		c.MR[i] = hash //  In that case, just insert
 		return
 	}
-	h := sha256.New()   // Combine this hash with the hash at this height in the MR.  Then recurse at the next
+	h := sha256.New()   // Combine this hash with the hash at this height in the MD.  Then recurse at the next
 	h.Write(c.MR[i][:]) // level with the result.
 	h.Write(hash)
 	c.MR[i] = nil
