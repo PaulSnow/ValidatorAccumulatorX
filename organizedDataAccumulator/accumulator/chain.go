@@ -1,17 +1,18 @@
 package accumulator
 
 import (
-	"sync"
-
 	"github.com/PaulSnow/LoadTest/organizedDataAccumulator/types"
 )
 
+// Chain
+// Tracks the construction of the Merkle DAG and collects the Hash sequence to build the MD
 type Chain struct {
 	MD       []*types.Hash // Array of hashes that represent the right edge of the Merkle tree
-	Mux      sync.Mutex    // Allow the chain to be locked when closing
 	HashList []types.Hash  // List of Hashes in the order added to the chain
 }
 
+// AddToChain
+// Add a Hash to the chain and incrementally build the MD
 func (c *Chain) AddToChain(hash types.Hash) {
 
 	// We are going through through the MD list and combining hashes, so we have to record the hash first thing
@@ -40,6 +41,7 @@ func (c *Chain) AddToChain(hash types.Hash) {
 	}
 }
 
+// GetMDRoot
 // Close off the Merkle Directed Acyclic Graph (Merkle DAG or MD)
 // We take any trailing hashes in MD, hash them up and combine to create the Merkle Dag Root.
 // Getting the closing MDRoot is non-destructive, which is useful for some use cases.

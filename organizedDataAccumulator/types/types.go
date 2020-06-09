@@ -1,6 +1,10 @@
 package types
 
-import "crypto/sha256"
+import (
+	"crypto/sha256"
+	"os"
+	"os/user"
+)
 
 type VersionField uint8 // We are typing certain things in the protocol
 type Hash [32]byte      // We are currently using sha256 hashes
@@ -26,3 +30,34 @@ func (h Hash) Combine(right Hash) *Hash {
 	copy(combinedHash[:], sum.Sum(nil))
 	return &combinedHash
 }
+
+func GetHomeDir() string {
+	valAccHome := os.Getenv("VALACC")
+	if valAccHome != "" {
+		return valAccHome
+	}
+
+	// Get the OS specific home directory via the Go standard lib.
+	var homeDir string
+	usr, err := user.Current()
+	if err == nil {
+		homeDir = usr.HomeDir
+	}
+
+	// Fall back to standard HOME environment variable that works
+	// for most POSIX OSes if the directory from the Go standard
+	// lib failed.
+	if err != nil || homeDir == "" {
+		homeDir = os.Getenv("HOME")
+	}
+	return homeDir
+}
+
+// Bucket Names used by the accumulator and validator
+
+const (
+	Entry                = "entry"
+	DirectoryBlockHeight = "dbHeight"
+	DirectoryBlockHash   = "dbHash"
+	Node                 = "node"
+)
