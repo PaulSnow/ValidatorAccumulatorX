@@ -1,12 +1,24 @@
 package database
 
+// As a key value store, we are not as yet using too many of the features of any database.
+// We use hashes to order entries, which are also organized into buckets, much as LevelDB
+// allows.
+//
+//To use this DB interface, you must allocate a DB
+// Then call DB.Init(int)
+//
+// To set a value in the database, call DB.Set(bucket string, key []byte, value []byte) error
+//
+// To get a value from the database, call DB.Get(bucket string, key []byte) (value []byte)_
+//
+// see ValAcc/types/types.go for the constants for bucket names
+
 import (
 	"fmt"
 	"os"
 
-	"github.com/dgraph-io/badger/v2"
-
 	"github.com/PaulSnow/LoadTest/organizedDataAccumulator/types"
+	"github.com/dgraph-io/badger/v2"
 )
 
 type DB struct {
@@ -14,6 +26,9 @@ type DB struct {
 	badgerDB *badger.DB
 }
 
+// We take an instance of the database, because we anticipate sometime in the future,
+// running multiple instances of the database.  This feature might not ever be used
+// for the ValAcc project, but it has been useful for factomd testing.
 func (d *DB) Init(instance int) {
 	// Make sure the home directory exists.
 	d.DBHome = fmt.Sprintf("%s%s%03d", types.GetHomeDir(), "/.ValAcc/badger", instance)
