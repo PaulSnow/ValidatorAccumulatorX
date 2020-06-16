@@ -7,7 +7,7 @@ import (
 
 func TestMerkleBuilding(t *testing.T) {
 	hash := sha256.Sum256([]byte("testdata"))
-	chain := new(Chain)
+	chain := new(ChainAcc)
 
 	// This test depends on the observation that the non blank entries in c.MD must be non-zero
 	// for every set bit in the count of the entries added to c.MD.  So all we have to do to check the algorithm
@@ -33,7 +33,7 @@ func TestMerkleBuilding(t *testing.T) {
 
 func TestMerkleInclusion(t *testing.T) {
 	hash := sha256.Sum256([]byte("testdata"))
-	chain := new(Chain)
+	chain := new(ChainAcc)
 
 	// This test leverages the fact that GetMDRoot() is non-destructive.  So we build up a
 	// a MDRoot up to our limit, but after each additional entry, we redo the process with the entries
@@ -47,7 +47,7 @@ func TestMerkleInclusion(t *testing.T) {
 
 		MDRoot := chain.GetMDRoot()
 
-		copyChain := new(Chain)
+		copyChain := new(ChainAcc)
 		for _, v := range chain.HashList {
 			copyChain.AddToChain(v)
 		}
@@ -70,10 +70,10 @@ func TestMerkleInclusion(t *testing.T) {
 
 		for i := 0; i < eCnt; i++ { // Run eCnt tests (one for every entry in chain
 			for j := 0; j < eCnt; j++ { // Modify each of the entries in chain and compute a MDRoot
-				modChain := new(Chain)
+				modChain := new(ChainAcc)
 				for i, v := range chain.HashList {
 					if i == j {
-						v[0] ^= 1 // Flip one bit only in the inputs into the new Chain
+						v[0] ^= 1 // Flip one bit only in the inputs into the new ChainAcc
 					}
 					modChain.AddToChain(v)
 				}

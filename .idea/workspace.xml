@@ -2,20 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a9f2ff96-fa88-4a2c-a252-c4716156770f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/paul.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/paul.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ValAcc/merkleDag/entry.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ValAcc/types/database.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/organizedDataAccumulator/Test.go" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/Test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/organizedDataAccumulator/accumulator/accumulator.go" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/accumulator/accumulator.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/organizedDataAccumulator/accumulator/chain.go" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/accumulator/chain.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/organizedDataAccumulator/accumulator/chain_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/accumulator/chain_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/organizedDataAccumulator/accumulator/entryblocks.go" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/accumulator/entryblocks.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/organizedDataAccumulator/database/database.go" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/database/database.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/organizedDataAccumulator/database/database_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/database/database_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/organizedDataAccumulator/entry/Entry.go" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/entry/Entry.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/organizedDataAccumulator/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/organizedDataAccumulator/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/organizedDataAccumulator/go_build_github_com_PaulSnow_LoadTest_organizedDataAccumulator" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/go_build_github_com_PaulSnow_LoadTest_organizedDataAccumulator" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/organizedDataAccumulator/types/types.go" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/types/types.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simple/txGenerators/simpleTokenTx.go" beforeDir="false" afterPath="$PROJECT_DIR$/Simple/txGenerators/simpleTokenTx.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ValAcc/Test.go" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/Test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ValAcc/accumulator/accumulator.go" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/accumulator/accumulator.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ValAcc/accumulator/chain.go" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/accumulator/chain.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ValAcc/accumulator/chain_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/accumulator/chain_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ValAcc/entry/Entry.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ValAcc/types/types.go" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,21 +25,6 @@
         <option value="Go File" />
       </list>
     </option>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>AddToMR</find>
-      <find>AddtoMR</find>
-      <find>cnt</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>func (c *Chain)</replace>
-      <replace>c.MR</replace>
-      <replace>c.AddtoMR</replace>
-      <replace>AddToMR</replace>
-      <replace>cnt.Count</replace>
-      <replace>chain</replace>
-    </replaceStrings>
   </component>
   <component name="GOROOT" path="/usr/local/go" />
   <component name="Git.Settings">
@@ -77,7 +58,7 @@
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/organizedDataAccumulator" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/ValAcc/merkleDag" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -89,35 +70,25 @@
     <property name="settings.editor.selected.configurable" value="watcher.settings" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/LevelDBTest/entry" />
       <recent name="$PROJECT_DIR$/Simple" />
       <recent name="$PROJECT_DIR$/accumulator" />
     </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/ValAcc/merkleDag" />
+      <recent name="$PROJECT_DIR$/ValAcc/types" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
   </component>
-  <component name="RunManager" selected="Go Test.TestMerkleInclusion in github.com/PaulSnow/LoadTest/organizedDataAccumulator/accumulator">
+  <component name="RunManager" selected="Go Build.go build github.com/PaulSnow/LoadTest/organizedDataAccumulator">
     <configuration name="go build github.com/PaulSnow/LoadTest/organizedDataAccumulator" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="LoadTest" />
-      <working_directory value="$PROJECT_DIR$/organizedDataAccumulator" />
-      <kind value="FILE" />
-      <filePath value="$PROJECT_DIR$/organizedDataAccumulator/Test.go" />
+      <working_directory value="$PROJECT_DIR$/ValAcc" />
+      <kind value="PACKAGE" />
+      <filePath value="$PROJECT_DIR$/ValAcc/Test.go" />
       <package value="github.com/PaulSnow/LoadTest/organizedDataAccumulator" />
       <directory value="$PROJECT_DIR$/" />
-      <output_directory value="$PROJECT_DIR$/organizedDataAccumulator" />
-      <method v="2" />
-    </configuration>
-    <configuration name="TestDatabase in github.com/PaulSnow/LoadTest/organizedDataAccumulator/database" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="LoadTest" />
-      <working_directory value="$PROJECT_DIR$/organizedDataAccumulator/database" />
-      <framework value="gotest" />
-      <kind value="PACKAGE" />
-      <package value="github.com/PaulSnow/LoadTest/organizedDataAccumulator/database" />
-      <directory value="$PROJECT_DIR$/" />
-      <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^TestDatabase$" />
       <method v="2" />
     </configuration>
     <configuration name="TestDatabase2 in github.com/PaulSnow/LoadTest/organizedDataAccumulator/database" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -129,6 +100,17 @@
       <directory value="$PROJECT_DIR$/" />
       <filePath value="$PROJECT_DIR$/" />
       <pattern value="^TestDatabase2$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestEntry in github.com/PaulSnow/LoadTest/organizedDataAccumulator/merkleDag" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="LoadTest" />
+      <working_directory value="$PROJECT_DIR$/ValAcc/merkleDag" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/PaulSnow/LoadTest/organizedDataAccumulator/merkleDag" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestEntry$" />
       <method v="2" />
     </configuration>
     <configuration name="TestMerkleBuilding in github.com/PaulSnow/LoadTest/organizedDataAccumulator/accumulator" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -154,19 +136,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Go Build.go build github.com/PaulSnow/LoadTest/organizedDataAccumulator" />
       <item itemvalue="Go Test.TestMerkleBuilding in github.com/PaulSnow/LoadTest/organizedDataAccumulator/accumulator" />
       <item itemvalue="Go Test.TestMerkleInclusion in github.com/PaulSnow/LoadTest/organizedDataAccumulator/accumulator" />
-      <item itemvalue="Go Test.TestDatabase in github.com/PaulSnow/LoadTest/organizedDataAccumulator/database" />
       <item itemvalue="Go Test.TestDatabase2 in github.com/PaulSnow/LoadTest/organizedDataAccumulator/database" />
+      <item itemvalue="Go Test.TestEntry in github.com/PaulSnow/LoadTest/organizedDataAccumulator/merkleDag" />
+      <item itemvalue="Go Build.go build github.com/PaulSnow/LoadTest/organizedDataAccumulator" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Build.go build github.com/PaulSnow/LoadTest/organizedDataAccumulator" />
+        <item itemvalue="Go Test.TestEntry in github.com/PaulSnow/LoadTest/organizedDataAccumulator/merkleDag" />
         <item itemvalue="Go Test.TestMerkleInclusion in github.com/PaulSnow/LoadTest/organizedDataAccumulator/accumulator" />
         <item itemvalue="Go Test.TestMerkleBuilding in github.com/PaulSnow/LoadTest/organizedDataAccumulator/accumulator" />
         <item itemvalue="Go Test.TestDatabase2 in github.com/PaulSnow/LoadTest/organizedDataAccumulator/database" />
-        <item itemvalue="Go Test.TestDatabase in github.com/PaulSnow/LoadTest/organizedDataAccumulator/database" />
-        <item itemvalue="Go Build.go build github.com/PaulSnow/LoadTest/organizedDataAccumulator" />
       </list>
     </recent_temporary>
   </component>
@@ -183,6 +165,14 @@
     <proxy>direct</proxy>
   </component>
   <component name="WindowStateProjectService">
+    <state x="1236" y="826" width="704" height="779" key="#TestMerkleInclusion_in_github.com/PaulSnow/LoadTest/organizedDataAccumulator/accumulator" timestamp="1592258584229">
+      <screen x="49" y="24" width="3791" height="2136" />
+    </state>
+    <state x="1236" y="826" width="704" height="779" key="#TestMerkleInclusion_in_github.com/PaulSnow/LoadTest/organizedDataAccumulator/accumulator/49.24.3791.2136@49.24.3791.2136" timestamp="1592258584229" />
+    <state x="949" y="875" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1591730292941">
+      <screen x="49" y="24" width="3791" height="2136" />
+    </state>
+    <state x="949" y="875" key="#com.intellij.execution.impl.EditConfigurationsDialog/49.24.3791.2136@49.24.3791.2136" timestamp="1591730292941" />
     <state x="2447" y="1222" key="#go_build_github.com/PaulSnow/LoadTest/organizedDataAccumulator" timestamp="1591547950257">
       <screen x="49" y="24" width="3791" height="2136" />
     </state>
@@ -195,38 +185,38 @@
       <screen x="49" y="24" width="3791" height="2136" />
     </state>
     <state x="1430" y="896" width="424" height="482" key="FileChooserDialogImpl/49.24.3791.2136@49.24.3791.2136" timestamp="1591547942630" />
-    <state width="1184" height="304" key="GridCell.Tab.0.bottom" timestamp="1591673981942">
+    <state width="1393" height="390" key="GridCell.Tab.0.bottom" timestamp="1592315478484">
       <screen x="49" y="24" width="3791" height="2136" />
     </state>
-    <state width="1184" height="304" key="GridCell.Tab.0.bottom/49.24.3791.2136@49.24.3791.2136" timestamp="1591673981942" />
-    <state width="1184" height="304" key="GridCell.Tab.0.center" timestamp="1591673981941">
+    <state width="1393" height="390" key="GridCell.Tab.0.bottom/49.24.3791.2136@49.24.3791.2136" timestamp="1592315478484" />
+    <state width="1393" height="390" key="GridCell.Tab.0.center" timestamp="1592315478483">
       <screen x="49" y="24" width="3791" height="2136" />
     </state>
-    <state width="1184" height="304" key="GridCell.Tab.0.center/49.24.3791.2136@49.24.3791.2136" timestamp="1591673981941" />
-    <state width="1184" height="304" key="GridCell.Tab.0.left" timestamp="1591673981940">
+    <state width="1393" height="390" key="GridCell.Tab.0.center/49.24.3791.2136@49.24.3791.2136" timestamp="1592315478483" />
+    <state width="1393" height="390" key="GridCell.Tab.0.left" timestamp="1592315478483">
       <screen x="49" y="24" width="3791" height="2136" />
     </state>
-    <state width="1184" height="304" key="GridCell.Tab.0.left/49.24.3791.2136@49.24.3791.2136" timestamp="1591673981940" />
-    <state width="1184" height="304" key="GridCell.Tab.0.right" timestamp="1591673981941">
+    <state width="1393" height="390" key="GridCell.Tab.0.left/49.24.3791.2136@49.24.3791.2136" timestamp="1592315478483" />
+    <state width="1393" height="390" key="GridCell.Tab.0.right" timestamp="1592315478484">
       <screen x="49" y="24" width="3791" height="2136" />
     </state>
-    <state width="1184" height="304" key="GridCell.Tab.0.right/49.24.3791.2136@49.24.3791.2136" timestamp="1591673981941" />
-    <state width="1787" height="236" key="GridCell.Tab.1.bottom" timestamp="1591635618444">
+    <state width="1393" height="390" key="GridCell.Tab.0.right/49.24.3791.2136@49.24.3791.2136" timestamp="1592315478484" />
+    <state width="1393" height="1083" key="GridCell.Tab.1.bottom" timestamp="1592280852711">
       <screen x="49" y="24" width="3791" height="2136" />
     </state>
-    <state width="1787" height="236" key="GridCell.Tab.1.bottom/49.24.3791.2136@49.24.3791.2136" timestamp="1591635618444" />
-    <state width="1787" height="236" key="GridCell.Tab.1.center" timestamp="1591635618443">
+    <state width="1393" height="1083" key="GridCell.Tab.1.bottom/49.24.3791.2136@49.24.3791.2136" timestamp="1592280852711" />
+    <state width="1393" height="1083" key="GridCell.Tab.1.center" timestamp="1592280852710">
       <screen x="49" y="24" width="3791" height="2136" />
     </state>
-    <state width="1787" height="236" key="GridCell.Tab.1.center/49.24.3791.2136@49.24.3791.2136" timestamp="1591635618443" />
-    <state width="1787" height="236" key="GridCell.Tab.1.left" timestamp="1591635618442">
+    <state width="1393" height="1083" key="GridCell.Tab.1.center/49.24.3791.2136@49.24.3791.2136" timestamp="1592280852710" />
+    <state width="1393" height="1083" key="GridCell.Tab.1.left" timestamp="1592280852710">
       <screen x="49" y="24" width="3791" height="2136" />
     </state>
-    <state width="1787" height="236" key="GridCell.Tab.1.left/49.24.3791.2136@49.24.3791.2136" timestamp="1591635618442" />
-    <state width="1787" height="236" key="GridCell.Tab.1.right" timestamp="1591635618444">
+    <state width="1393" height="1083" key="GridCell.Tab.1.left/49.24.3791.2136@49.24.3791.2136" timestamp="1592280852710" />
+    <state width="1393" height="1083" key="GridCell.Tab.1.right" timestamp="1592280852710">
       <screen x="49" y="24" width="3791" height="2136" />
     </state>
-    <state width="1787" height="236" key="GridCell.Tab.1.right/49.24.3791.2136@49.24.3791.2136" timestamp="1591635618444" />
+    <state width="1393" height="1083" key="GridCell.Tab.1.right/49.24.3791.2136@49.24.3791.2136" timestamp="1592280852710" />
     <state x="985" y="851" key="SettingsEditor" timestamp="1591672450244">
       <screen x="49" y="24" width="3791" height="2136" />
     </state>
@@ -247,6 +237,11 @@
           <url>file://$PROJECT_DIR$/Simple/accumulator/router.go</url>
           <line>64</line>
           <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/ValAcc/merkleDag/entry.go</url>
+          <line>143</line>
+          <option name="timeStamp" value="20" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
