@@ -2,16 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a9f2ff96-fa88-4a2c-a252-c4716156770f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/ValAcc/merkleDag/entry.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ValAcc/types/database.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simple/txGenerators/simpleTokenTx.go" beforeDir="false" afterPath="$PROJECT_DIR$/Simple/txGenerators/simpleTokenTx.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ValAcc/Test.go" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/Test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ValAcc/accumulator/accumulator.go" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/accumulator/accumulator.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ValAcc/accumulator/chain.go" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/accumulator/chain.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ValAcc/accumulator/chain_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/accumulator/chain_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ValAcc/entry/Entry.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ValAcc/types/types.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ValAcc/types/database.go" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/types/database.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ValAcc/types/hash.go" beforeDir="false" afterPath="$PROJECT_DIR$/ValAcc/types/hash.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +53,7 @@
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/ValAcc/merkleDag" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -136,11 +131,11 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Go Build.go build github.com/PaulSnow/LoadTest/organizedDataAccumulator" />
       <item itemvalue="Go Test.TestMerkleBuilding in github.com/PaulSnow/LoadTest/organizedDataAccumulator/accumulator" />
       <item itemvalue="Go Test.TestMerkleInclusion in github.com/PaulSnow/LoadTest/organizedDataAccumulator/accumulator" />
       <item itemvalue="Go Test.TestDatabase2 in github.com/PaulSnow/LoadTest/organizedDataAccumulator/database" />
       <item itemvalue="Go Test.TestEntry in github.com/PaulSnow/LoadTest/organizedDataAccumulator/merkleDag" />
-      <item itemvalue="Go Build.go build github.com/PaulSnow/LoadTest/organizedDataAccumulator" />
     </list>
     <recent_temporary>
       <list>
@@ -185,22 +180,22 @@
       <screen x="49" y="24" width="3791" height="2136" />
     </state>
     <state x="1430" y="896" width="424" height="482" key="FileChooserDialogImpl/49.24.3791.2136@49.24.3791.2136" timestamp="1591547942630" />
-    <state width="1393" height="390" key="GridCell.Tab.0.bottom" timestamp="1592315478484">
+    <state width="1393" height="390" key="GridCell.Tab.0.bottom" timestamp="1592488629457">
       <screen x="49" y="24" width="3791" height="2136" />
     </state>
-    <state width="1393" height="390" key="GridCell.Tab.0.bottom/49.24.3791.2136@49.24.3791.2136" timestamp="1592315478484" />
-    <state width="1393" height="390" key="GridCell.Tab.0.center" timestamp="1592315478483">
+    <state width="1393" height="390" key="GridCell.Tab.0.bottom/49.24.3791.2136@49.24.3791.2136" timestamp="1592488629457" />
+    <state width="1393" height="390" key="GridCell.Tab.0.center" timestamp="1592488629456">
       <screen x="49" y="24" width="3791" height="2136" />
     </state>
-    <state width="1393" height="390" key="GridCell.Tab.0.center/49.24.3791.2136@49.24.3791.2136" timestamp="1592315478483" />
-    <state width="1393" height="390" key="GridCell.Tab.0.left" timestamp="1592315478483">
+    <state width="1393" height="390" key="GridCell.Tab.0.center/49.24.3791.2136@49.24.3791.2136" timestamp="1592488629456" />
+    <state width="1393" height="390" key="GridCell.Tab.0.left" timestamp="1592488629455">
       <screen x="49" y="24" width="3791" height="2136" />
     </state>
-    <state width="1393" height="390" key="GridCell.Tab.0.left/49.24.3791.2136@49.24.3791.2136" timestamp="1592315478483" />
-    <state width="1393" height="390" key="GridCell.Tab.0.right" timestamp="1592315478484">
+    <state width="1393" height="390" key="GridCell.Tab.0.left/49.24.3791.2136@49.24.3791.2136" timestamp="1592488629455" />
+    <state width="1393" height="390" key="GridCell.Tab.0.right" timestamp="1592488629456">
       <screen x="49" y="24" width="3791" height="2136" />
     </state>
-    <state width="1393" height="390" key="GridCell.Tab.0.right/49.24.3791.2136@49.24.3791.2136" timestamp="1592315478484" />
+    <state width="1393" height="390" key="GridCell.Tab.0.right/49.24.3791.2136@49.24.3791.2136" timestamp="1592488629456" />
     <state width="1393" height="1083" key="GridCell.Tab.1.bottom" timestamp="1592280852711">
       <screen x="49" y="24" width="3791" height="2136" />
     </state>

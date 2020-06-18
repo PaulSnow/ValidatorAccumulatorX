@@ -35,3 +35,27 @@ func (h Hash) Combine(right Hash) *Hash {
 	copy(combinedHash[:], sum.Sum(nil))
 	return &combinedHash
 }
+
+// All the chainIDs under an Accumulator are unique to a DID in Factom, and unique
+// from all chainIDs in other Accumulators and Factom itself.
+//
+// A Factom ChainID is H( H(subChainID[0] + H(subChainID[1] + .. + H(subChainID[n]) where
+// the ChainID has n subChainIDs.
+//
+// An Accumulator ChainID is H (AccumulatorDID + 0x00 + H( H(subChainID[0] + H(subChainID[1] + .. + H(subChainID[n]))
+// One cannot construct such a ChainID in Factom, nor on another AccumulatorDID.
+//
+func GetChainID(AccumulatorDID Hash, SubChainIDs []Hash) (chainID Hash) {
+	sum := sha256.New()
+	for _, sc := range SubChainIDs {
+		h := sha256.Sum256(sc[:])
+		sum.Write(h[:])
+	}
+	combine := sum.Sum(nil)
+	sum = sha256.New()
+	sum.Write(AccumulatorDID[:])
+	sum.Write([]byte{0})
+	sum.Write(combine[:])
+	copy(chainID[:], sum.Sum(nil))
+	return chainID
+}

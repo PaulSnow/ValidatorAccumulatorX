@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"sort"
+	"time"
 
 	"github.com/PaulSnow/LoadTest/organizedDataAccumulator/merkleDag"
 	"github.com/PaulSnow/LoadTest/organizedDataAccumulator/types"
@@ -17,6 +18,7 @@ import (
 // Of course, the Accumulator does secure and order the data, so it is reasonable that a validator may optimistically
 // record entries that might be invalidated by applications after recording.
 type Accumulator struct {
+	chainID   *types.Hash              // Digital ID of the Accumulator.
 	height    int                      // Height of the current block
 	chains    map[types.Hash]*ChainAcc // Chains with new entries in this block
 	entryFeed chan merkleDag.EntryHash // Stream of entries to be placed into chains
@@ -25,7 +27,15 @@ type Accumulator struct {
 }
 
 // Allocate the HashMap and Channels for this accumulator
-func (a *Accumulator) Init() (EntryFeed chan merkleDag.EntryHash, control chan bool, mdFeed chan *types.Hash) {
+// The ChainID is the Digital Identity of the Accumulator.  We will want to integrate
+// useful digital IDs into the accumulator structure to ensure the integrity of the data
+// collected.
+func (a *Accumulator) Init(chainID *types.Hash) (
+	EntryFeed chan merkleDag.EntryHash, // Return the EntryFeed channel to send Entry Hashes to the accumulator
+	control chan bool, // The control channel signals End of Block to the accumulator
+	mdFeed chan *types.Hash) { // the Merkle DAG Feed (mdFeed) returns block merkle DAG roots
+
+	a.chainID = chainID
 	a.chains = make(map[types.Hash]*ChainAcc, 1000)
 	a.entryFeed = make(chan merkleDag.EntryHash, 10000)
 	a.control = make(chan bool, 1)
@@ -34,8 +44,12 @@ func (a *Accumulator) Init() (EntryFeed chan merkleDag.EntryHash, control chan b
 }
 
 type nodeEntry struct {
-	chainID types.Hash
-	MD      types.Hash
+	chainAcc *ChainAcc
+	MD       types.Hash
+}
+
+func (n nodeEntry) Marshal() (entries []byte) {
+	return
 }
 
 func (a *Accumulator) Run() {
@@ -44,35 +58,35 @@ func (a *Accumulator) Run() {
 	block:
 		for {
 
-			// Check to see if the block has ended.  If so, break block processing
-			// so we can tie up the block, and start the next one.
-			select {
-			case <-a.control:
-				break block
-			default:
-			}
-
 			// Block processing involves pulling Entries out of the entryFeed and adding
 			// it to the Merkle DAG (MD)
-			entry := <-a.entryFeed           // Get the next Entry
-			chain := a.chains[entry.ChainID] // See if we have a chain for it
-			if chain == nil {                // If we don't have a chain for it, then we add one to our tmp state
-				chain = NewChainAcc() // Create our collector for this chain
-
-				a.chains[entry.ChainID] = chain // Add it to our tmp state
+			select {
+			case ctl := <-a.control: // Have we been asked to end the block?
+				if ctl {
+					break block // Break block processing
+				}
+			case entry := <-a.entryFeed: // Get the next Entry
+				chain := a.chains[entry.ChainID] // See if we have a chain for it
+				if chain == nil {                // If we don't have a chain for it, then we add one to our tmp state
+					chain = NewChainAcc()           // Create our collector for this chain
+					a.chains[entry.ChainID] = chain // Add it to our tmp state
+				}
+				chain.MD.AddToChain(entry.EntryHash) // Add this entry to our chain state
+			default:
+				time.Sleep(100 * time.Millisecond) // If there is nothing to do, pause a bit
 			}
-			chain.MD.AddToChain(entry.EntryHash) // Add this entry to our chain state
 		}
 
 		var chainEntries []*nodeEntry
-		for k, v := range a.chains {
+		for _, v := range a.chains {
 			ne := new(nodeEntry)
-			ne.chainID = k
+			ne.chainAcc = v
 			ne.MD = *v.MD.GetMDRoot()
 			chainEntries = append(chainEntries, ne)
 		}
+
 		sort.Slice(chainEntries, func(i, j int) bool {
-			return bytes.Compare(chainEntries[i].chainID[:], chainEntries[j].chainID[:]) < 0
+			return bytes.Compare(chainEntries[i].chainAcc.ChainID[:], chainEntries[j].chainAcc.ChainID[:]) < 0
 		})
 
 		println("\n===========================\n")
@@ -81,7 +95,15 @@ func (a *Accumulator) Run() {
 			sum += len(v.MD.HashList)
 		}
 		fmt.Printf("%15d Entries\n", sum)
+
+		// Calculate the MDRoot for all the accumulated MDRoots for all the chains
+		MDAcc := new(merkleDag.MD)
+		for _, v := range chainEntries {
+			MDAcc.AddToChain(*v.chainAcc.MD.GetMDRoot())
+		}
+		a.mdFeed <- MDAcc.GetMDRoot()
+
+		// Clear out all the chain heads, to start another round of accumulation in the next block
 		a.chains = make(map[types.Hash]*ChainAcc, 1000)
-		a.mdFeed <- nil
 	}
 }
