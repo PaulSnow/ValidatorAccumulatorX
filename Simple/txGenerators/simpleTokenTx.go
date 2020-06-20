@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/PaulSnow/LoadTest/Simple/accumulator"
+	"github.com/PaulSnow/ValidatorAccumulator/Simple/accumulator"
 )
 
 const maxaddresses = 100000
@@ -62,7 +62,7 @@ func GenSimpleTokenTxs(router accumulator.Router) {
 		// Get the hash of the transaction
 		h := sha256.Sum256([]byte(tx))
 
-		// Write the transaction to the Chain ID in the accumulator
+		// Write the transaction to the ChainAcc ID in the accumulator
 		router.AddTx(HSAdr, h[:])
 	}
 

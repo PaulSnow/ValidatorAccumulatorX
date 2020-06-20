@@ -1,4 +1,4 @@
-module github.com/PaulSnow/LoadTest/Simple
+module github.com/PaulSnow/ValidatorAccumulator/Simple
 
 go 1.13
 

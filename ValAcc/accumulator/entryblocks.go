@@ -1,6 +1,6 @@
 package accumulator
 
-import "github.com/PaulSnow/LoadTest/organizedDataAccumulator/types"
+import "github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
 
 // NodeBlock
 // A Node Block collects a set of Merkle DAGs and creates a MD from that.  At the root, the NodeBlock is

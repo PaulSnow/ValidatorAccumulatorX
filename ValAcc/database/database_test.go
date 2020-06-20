@@ -48,7 +48,7 @@ func TestDatabase(t *testing.T) {
 func TestDatabase2(t *testing.T) {
 	db := new(DB)
 	db.Init(0)
-	db.Set("test", []byte("answer"), []byte("42"))
+	db.Put("test", []byte("answer"), []byte("42"))
 	answer := db.Get("test", []byte("answer"))
 	fmt.Println("The Answer is ", answer)
 }
