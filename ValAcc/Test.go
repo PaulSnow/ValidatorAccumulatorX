@@ -3,10 +3,11 @@ package main
 import (
 	"crypto/sha256"
 	"fmt"
+	"math/rand"
 	"time"
 
-	"github.com/FactomProject/factomd/common/primitives/random"
 	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/accumulator"
+	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/database"
 	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/node"
 	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
 )
@@ -14,6 +15,8 @@ import (
 func main() {
 	var Accumulator accumulator.Accumulator
 	var chains []types.Hash
+	DB := new(database.DB)
+	DB.Init(0)
 
 	// Calculate and package the AccDID for the Accumulator
 	AccDIDHash := sha256.Sum256([]byte("AccVal TestChain"))
@@ -21,7 +24,7 @@ func main() {
 	AccDID.Extract(AccDIDHash[:])
 
 	// Initialize the Accumulator
-	EntryFeed, Control, MDFeed := Accumulator.Init(&AccDID)
+	EntryFeed, Control, MDFeed := Accumulator.Init(DB, &AccDID)
 
 	// Start the Accumulator running
 	go Accumulator.Run()
@@ -37,9 +40,9 @@ func main() {
 
 	// Validator implementation
 	// Just create a series of hashes to be recorded.
-	seedHash := sha256.Sum256([]byte("Seed Hash"))
+	seedHash := sha256.Sum256([]byte(fmt.Sprint("Accumulator", rand.Int())))
 	for {
-		chain := random.RandInt() % 50000
+		chain := rand.Int() % 50
 		if chain >= len(chains) {
 			var h types.Hash
 			h.Extract(seedHash[:])

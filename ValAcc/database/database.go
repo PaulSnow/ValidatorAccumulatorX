@@ -31,14 +31,18 @@ type DB struct {
 // running multiple instances of the database.  This feature might not ever be used
 // for the ValAcc project, but it has been useful for factomd testing.
 func (d *DB) Init(instance int) {
-	// Make sure the home directory exists.
-	d.DBHome = fmt.Sprintf("%s%s%03d", types.GetHomeDir(), "/.ValAcc/badger", instance)
+	// Make sure the home directory exists. If it does, then use it, otherwise go find the home directory.
+	if len(d.DBHome) == 0 {
+		d.DBHome = fmt.Sprintf("%s%s%03d", types.GetHomeDir(), "/.ValAcc/badger", instance)
+	}
+	// Make sure all directories exist
 	os.MkdirAll(d.DBHome, 0777)
+	// Open Badger
 	db, err := badger.Open(badger.DefaultOptions(d.DBHome))
-	if err != nil {
+	if err != nil { // Panic if we can't open Badger
 		panic(err)
 	}
-	d.badgerDB = db
+	d.badgerDB = db // And all is good.
 }
 
 // GetKey
@@ -75,6 +79,11 @@ func (d *DB) Get(bucket string, key []byte) (value []byte) {
 	return value
 }
 
+func (d *DB) GetInt32(bucket string, ikey uint32) (value []byte) {
+	key := types.Uint32Bytes(ikey)
+	return d.Get(bucket, key)
+}
+
 // Put
 // Put a key/value in the database.  We return an error if there was a problem
 // writing the key/value pair to the database.
@@ -92,14 +101,7 @@ func (d *DB) Put(bucket string, key []byte, value []byte) error {
 // PutInt
 // Put a key/value in the database, where the key is an index.  We return an error if there was a problem
 // writing the key/value pair to the database.
-func (d *DB) PutInt(bucket string, ikey int, value []byte) error {
+func (d *DB) PutInt32(bucket string, ikey int, value []byte) error {
 	key := types.Uint32Bytes(uint32(ikey))
-	CKey := GetKey(bucket, key)
-
-	// Update the key/value in the database
-	err := d.badgerDB.Update(func(txn *badger.Txn) error {
-		err := txn.Set([]byte(CKey), value)
-		return err
-	})
-	return err
+	return d.Put(bucket, key, value)
 }

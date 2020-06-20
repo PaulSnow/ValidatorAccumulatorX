@@ -9,27 +9,11 @@ import (
 	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
 )
 
-// ANode
+// Node
 // Data is entered into system by the Accumulator as a series of entries organized by chainIDs
 // Unlike Factom, we will attempt to create a chain if the ChainID provided is nil.  We provide
 // a function to compute the ChainID from the first entry in a chain, for use by applications.
 // If a chain already exists, creating the chain will be ignored.
-//
-// Node
-//      Version					uint8
-//      Block Height			uint32
-//      SequenceNum             uint32
-//      TimeStamp				int64
-//      ChainID					[32]byte
-//      len(SubChainIDs)        uint16
-//        SubChainID            [32]byte
-//		Previous Node Header	[32]byte
-//		IsNode        		    uint8      1 is true (this is a node), 0 is false (this is an entry node)
-//		List MDRoot             [32]byte
-//		Len(List)				uint32
-//		List (SubNodes/Entries)
-//			Chain/SubChain ID	[32]byte     Sorted by Chain/SubChain ID
-//			Node/ANode Hash     [32]byte
 
 type Node struct {
 	Version     types.VersionField // Version of this data structure
@@ -41,25 +25,52 @@ type Node struct {
 	Previous    types.Hash         // Hash of previous Block Header
 	IsNode      bool               // IsNode is true for a node, is false for an entry
 	ListMDRoot  types.Hash         // Merkle DAG of the entries of the List (only the hashes)
-	List        []NEList           // List of ChainIDs/MDRoots for nodes/entries
+	List        []NEList           // List of ChainIDs/MDRoots for Directory block or sub block nodes
+	EntryList   []types.Hash       // List of Entry Hashes for an Entry node
+
+	MarshalCache []byte // Cache of the marshaled form of the node.  Do NOT marshal a node unless
+	//   the node is completely formed!
 }
 
 // NEList
-// Node ANode List (NEList) is a struct of a ChainID and a Node or ANode Hash
+// Node List (NEList) is a struct of a ChainID and a Node Hash
 type NEList struct {
 	ChainID types.Hash // Chain or SubChain ID that leads to a node, or a ChainID that leads to an ANode
 	MDRoot  types.Hash // Merkle Dag of either sub nodes or entries
 }
 
-// Put this node into the database
-func (n Node) Put(db database.DB) error {
+// Put
+// Put this node into the database.  There is a little special treatment for the Directory Blocks.
+// In that case, the ChainID is the DID for the root Accumulator, and there are no SubChainIDs.
+func (n Node) Put(db *database.DB) error {
+	nHash := n.GetHash()[:]
+
+	// So first do some indexing around the chain of nodes for this ChainID.  Set nodeFirst, nodeNext, nodeHead
+
+	// Get the last node recorded for this ChainID (that's the head hash)
+	headHash := db.Get(types.NodeHead, n.ChainID[:])
+	if headHash == nil && n.SequenceNum != 0 { // If that's nil, and our sequence number isn't zero, bad stuff is about!
+		return errors.New(fmt.Sprintf("chainID %x not found in DB, with sequence number %d", n.ChainID, n.SequenceNum))
+	} else if headHash == nil { // If we have no previous hash and our sequence number is zero, this is our first!
+		db.Put(types.NodeFirst, n.ChainID[:], nHash)
+	} else { // Otherwise if I have a previous hash, then create an index from it to this node
+		db.Put(types.NodeNext, headHash, nHash)
+	}
+	db.Put(types.NodeHead, n.ChainID.Bytes(), nHash)
+
+	// If a node does not have any SubChains to define its ChainID, then its ChainID is really
+	// the DID for the root accumulator, and this is a Directory Block.  So we will index it
+	// against the block height.  Other nodes are not indexed by block height.
 	if len(n.SubChainIDs) == 0 {
 		marshal := n.Marshal()
 		if marshal == nil {
 			return errors.New("failed to marshal node")
 		}
-		db.PutInt(types.DirectoryBlockHeight, int(n.BHeight), n.Marshal())
+		db.PutInt32(types.DirectoryBlockHeight, int(n.BHeight), nHash)
 	}
+
+	db.Put(types.Node, nHash, n.Marshal()) // And of course, store the actual content.  Only in one place in the DB
+
 	return nil
 }
 
@@ -109,6 +120,14 @@ func (n Node) SameAs(n2 Node) bool {
 			return false
 		}
 	}
+	if len(n.EntryList) != len(n2.EntryList) {
+		return false
+	}
+	for i, list := range n.EntryList {
+		if list != n2.EntryList[i] {
+			return false
+		}
+	}
 	return true
 }
 
@@ -116,6 +135,10 @@ func (n Node) SameAs(n2 Node) bool {
 // Convert the given entry into a byte slice. Add to that the SubChainIDs of the ChainID. Returns nil
 // if anything goes wrong while marshaling
 func (n Node) Marshal() (bytes []byte) {
+
+	if n.MarshalCache != nil {
+		return n.MarshalCache
+	}
 
 	// On any error, return a nil for the byte representation of the ANode
 	defer func() {
@@ -142,6 +165,11 @@ func (n Node) Marshal() (bytes []byte) {
 		bytes = append(bytes, list.ChainID.Bytes()...) // Chain/SubChain ID
 		bytes = append(bytes, list.MDRoot.Bytes()...)  // MD of the sub node or entry
 	}
+	bytes = append(bytes, types.Uint32Bytes(uint32(len(n.EntryList)))...) // Put the number of List Entries
+	for _, list := range n.EntryList {                                    // For each Entry
+		bytes = append(bytes, list.Bytes()...) // MD of the sub node or entry
+	}
+	n.MarshalCache = bytes
 	return bytes // Return the slice
 }
 
@@ -210,6 +238,13 @@ func (n *Node) Unmarshal(data []byte) (dataConsumed int, err error) {
 		data = ne.ChainID.Extract(data)
 		data = ne.MDRoot.Extract(data)
 		n.List = append(n.List, *ne)
+	}
+	var eListLen uint32
+	listLen, data = types.BytesUint32(data)
+	for i := uint32(0); i < eListLen; i++ {
+		var eHash types.Hash
+		eHash.Extract(data)
+		n.EntryList = append(n.EntryList, eHash)
 	}
 
 	return len(d) - len(data), nil // Return the bytes consumed and a nil that all is well for an error
