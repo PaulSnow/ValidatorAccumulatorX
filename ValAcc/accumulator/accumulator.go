@@ -6,6 +6,8 @@ import (
 	"sort"
 	"time"
 
+	"github.com/PaulSnow/LoadTest/organizedDataAccumulator/node"
+
 	"github.com/PaulSnow/LoadTest/organizedDataAccumulator/merkleDag"
 	"github.com/PaulSnow/LoadTest/organizedDataAccumulator/types"
 )
@@ -21,7 +23,7 @@ type Accumulator struct {
 	chainID   *types.Hash              // Digital ID of the Accumulator.
 	height    int                      // Height of the current block
 	chains    map[types.Hash]*ChainAcc // Chains with new entries in this block
-	entryFeed chan merkleDag.EntryHash // Stream of entries to be placed into chains
+	entryFeed chan node.EntryHash      // Stream of entries to be placed into chains
 	control   chan bool                // We are sent a "true" when it is time to end the block
 	mdFeed    chan *types.Hash         // Give back the MD Hashes as they are produced
 }
@@ -31,13 +33,13 @@ type Accumulator struct {
 // useful digital IDs into the accumulator structure to ensure the integrity of the data
 // collected.
 func (a *Accumulator) Init(chainID *types.Hash) (
-	EntryFeed chan merkleDag.EntryHash, // Return the EntryFeed channel to send Entry Hashes to the accumulator
+	EntryFeed chan node.EntryHash, // Return the EntryFeed channel to send Entry Hashes to the accumulator
 	control chan bool, // The control channel signals End of Block to the accumulator
 	mdFeed chan *types.Hash) { // the Merkle DAG Feed (mdFeed) returns block merkle DAG roots
 
 	a.chainID = chainID
 	a.chains = make(map[types.Hash]*ChainAcc, 1000)
-	a.entryFeed = make(chan merkleDag.EntryHash, 10000)
+	a.entryFeed = make(chan node.EntryHash, 10000)
 	a.control = make(chan bool, 1)
 	a.mdFeed = make(chan *types.Hash, 1)
 	return a.entryFeed, a.control, a.mdFeed

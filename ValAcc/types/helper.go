@@ -45,16 +45,22 @@ func GetHomeDir() string {
 	return homeDir
 }
 
-// Uint8Bytes
-// Marshal a uint8
-func Uint8Bytes(i uint8) []byte {
-	return append([]byte{}, byte(i))
+// BoolBytes
+// Marshal a Bool
+func BoolBytes(b bool) []byte {
+	if b {
+		return append([]byte{}, 1)
+	}
+	return append([]byte{}, 0)
 }
 
-// BytesUint8
+// BytesBool
 // Unmarshal a Uint8
-func BytesUint8(data []byte) (uint8, []byte) {
-	return uint8(data[0]), data[1:]
+func BytesBool(data []byte) (f bool, newData []byte) {
+	if data[0] != 0 {
+		f = true
+	}
+	return f, data[1:]
 }
 
 // Uint16Bytes

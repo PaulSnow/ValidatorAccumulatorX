@@ -1,4 +1,4 @@
-package merkleDag
+package node
 
 import (
 	"bytes"
@@ -15,13 +15,23 @@ import (
 // a function to compute the ChainID from the first entry in a chain, for use by applications.
 // If a chain already exists, creating the chain will be ignored.
 //
-// Binary Data looks like:
-//    uint8      version
-//    byte[32]   ChainID
-//    uint16     Count of ExtIDs
-//       uint16 len(ExtIDs[0])
+// Entry
+//    Version          uint8
+//    TimeStamp        uint64
+//    ChainID          [32]byte
+//    len(SubChains)   uint64
+//    SubChains        []SubChain
+//       Len(SubChain)    uint16
+//       SubChain[]       []byte
+//    #ExtIDs          uint16
+//    ExtIDs           []ExtID
+//      len(ExtID)        uint16
+//      ExtID             []byte
+//    len(content)     uint16
+//    Content          []byte
 type Entry struct {
 	Version     types.VersionField // Version of this data structure
+	TimeStamp   types.TimeStamp    // Timestamp of the construction of this entry
 	ChainID     types.Hash         // The ChainID
 	SubChainIDs []types.Hash       // SubChainIDs required to build the ChainID
 	ExtIDs      []types.DataField  // External ids used to create the chain id above ( see ExternalIDsToChainID() )
@@ -71,33 +81,15 @@ func (e Entry) Marshal() (bytes []byte) {
 		}
 	}()
 
-	bytes = e.MarshalForHash()
+	bytes = append(bytes, e.Version.Bytes()...)   // Put the version into the slice
+	bytes = append(bytes, e.TimeStamp.Bytes()...) // Add the TimeStamp
+	bytes = append(bytes, e.ChainID.Bytes()...)   // Put the ChainID into the slice
 
-	if bytes == nil {
-		panic("Failed to Marshal Entry")
-	}
 	bytes = append(bytes, types.UInt16Bytes(uint16(len(e.SubChainIDs)))...) // Put the number of ExtIDs in the slice
 	for _, subChain := range e.SubChainIDs {                                // For each ExtID
 		bytes = append(bytes, subChain.Bytes()...) // Put the ExtID's data in the slice
 	}
 
-	return bytes // Return the slice
-}
-
-// MarshalForHash
-// These are the fields we need to create an Entry Hash
-func (e Entry) MarshalForHash() (bytes []byte) {
-
-	// On any error, return a nil for the byte representation of the Entry
-	defer func() {
-		if r := recover(); r != nil {
-			bytes = nil
-			return
-		}
-	}()
-
-	bytes = append(bytes, e.Version.Bytes()...)                        // Put the version into the slice
-	bytes = append(bytes, e.ChainID.Bytes()...)                        // Put the ChainID into the slice
 	bytes = append(bytes, types.UInt16Bytes(uint16(len(e.ExtIDs)))...) // Put the number of ExtIDs in the slice
 	for _, extID := range e.ExtIDs {                                   // For each ExtID
 		bytes = append(bytes, types.UInt16Bytes(uint16(len(extID)))...) // Put its length in the slice
@@ -116,10 +108,10 @@ func (e Entry) MarshalForHash() (bytes []byte) {
 // GetHash
 // Returns the EntryHash for this entry.  Note the Entry Hash does not include the SubChainIDs
 func (e Entry) GetHash() (hash *types.Hash) {
-	h := e.MarshalForHash() // Get the bytes behind the EntryHash
-	if h == nil {           // A nil would mean the Entry didn't marshal
+	h := e.Marshal() // Get the bytes behind the EntryHash
+	if h == nil {    // A nil would mean the Entry didn't marshal
 		return nil
-	}
+	} // If Marshal Fails, return a nil
 	hash = new(types.Hash) // Get the Hash object to return
 	hs := sha256.Sum256(h) // Get the array holding the hash (so we can create a slice)
 	hash.Extract(hs[:])    // Populate the Hash object
@@ -139,6 +131,7 @@ func (e *Entry) Unmarshal(data []byte) (dataConsumed int, err error) {
 	}()
 	d := data                          // d keeps the original slice
 	data = e.Version.Extract(data)     // Extract the version
+	data = e.TimeStamp.Extract(data)   // Extract the TimeStamp
 	data = e.ChainID.Extract(data)     // Extract the ChainID
 	e.SubChainIDs = e.SubChainIDs[0:0] // Clear any ExtIDs that might already be in this Entry
 

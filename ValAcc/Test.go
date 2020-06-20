@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/PaulSnow/LoadTest/organizedDataAccumulator/node"
+
 	"github.com/FactomProject/factomd/common/primitives/random"
 
-	"github.com/PaulSnow/LoadTest/organizedDataAccumulator/merkleDag"
 	"github.com/PaulSnow/LoadTest/organizedDataAccumulator/types"
 
 	"github.com/PaulSnow/LoadTest/organizedDataAccumulator/accumulator"
@@ -49,7 +50,7 @@ func main() {
 			chain = len(chains)
 			chains = append(chains, h)
 		}
-		var eh merkleDag.EntryHash
+		var eh node.EntryHash
 		eh.ChainID = chains[chain]
 		eh.EntryHash.Extract(seedHash[:])
 		seedHash = sha256.Sum256(seedHash[:])

@@ -1,0 +1,27 @@
+
+
+Factom
+	DID for Accumulator
+		DID + "MD" collects signed Accumulator MDRoots as produced
+
+
+                         __ Node Header
+   		Acc MDRoot ____/                     Node Header
+                        \__ Node MDRoot ___/
+                                            \___ Node MDRoot __ Entries
+
+         Node
+            version
+            Block Height
+            TimeStamp
+            ChainID
+		    Previous Node Header
+            Node MDRoot
+			Flag SubNodes/Entries
+			Size of List
+            List of SubNodes/Entries
+
+
+
+
+
