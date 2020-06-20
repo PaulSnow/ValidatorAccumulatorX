@@ -5,13 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/PaulSnow/LoadTest/organizedDataAccumulator/node"
-
 	"github.com/FactomProject/factomd/common/primitives/random"
-
-	"github.com/PaulSnow/LoadTest/organizedDataAccumulator/types"
-
-	"github.com/PaulSnow/LoadTest/organizedDataAccumulator/accumulator"
+	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/accumulator"
+	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/node"
+	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
 )
 
 func main() {

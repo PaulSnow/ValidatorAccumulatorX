@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/PaulSnow/LoadTest/Simple/accumulator"
+	"github.com/PaulSnow/ValidatorAccumulator/Simple/accumulator"
 )
 
 const maxaddresses = 100000

@@ -6,10 +6,9 @@ import (
 	"sort"
 	"time"
 
-	"github.com/PaulSnow/LoadTest/organizedDataAccumulator/node"
-
-	"github.com/PaulSnow/LoadTest/organizedDataAccumulator/merkleDag"
-	"github.com/PaulSnow/LoadTest/organizedDataAccumulator/types"
+	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/merkleDag"
+	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/node"
+	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
 )
 
 // Accumulator

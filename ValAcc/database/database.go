@@ -17,7 +17,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/PaulSnow/LoadTest/organizedDataAccumulator/types"
+	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
+
 	"github.com/dgraph-io/badger/v2"
 )
 

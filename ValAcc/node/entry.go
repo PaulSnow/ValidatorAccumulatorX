@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/PaulSnow/LoadTest/organizedDataAccumulator/types"
+	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
 )
 
 // Entry
