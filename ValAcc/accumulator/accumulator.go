@@ -97,7 +97,7 @@ func (a *Accumulator) Run() {
 		}
 		fmt.Printf("%15d Entries\n", sum)
 
-		// Calculate the MDRoot for all the accumulated MDRoots for all the chains
+		// Calculate the ListMDRoot for all the accumulated MDRoots for all the chains
 		MDAcc := new(merkleDag.MD)
 		for _, v := range chainEntries {
 			MDAcc.AddToChain(*v.chainAcc.MD.GetMDRoot())

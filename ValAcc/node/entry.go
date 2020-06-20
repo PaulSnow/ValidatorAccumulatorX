@@ -85,18 +85,18 @@ func (e ANode) Marshal() (bytes []byte) {
 	bytes = append(bytes, e.TimeStamp.Bytes()...) // Add the TimeStamp
 	bytes = append(bytes, e.ChainID.Bytes()...)   // Put the ChainID into the slice
 
-	bytes = append(bytes, types.UInt16Bytes(uint16(len(e.SubChainIDs)))...) // Put the number of ExtIDs in the slice
+	bytes = append(bytes, types.Uint16Bytes(uint16(len(e.SubChainIDs)))...) // Put the number of ExtIDs in the slice
 	for _, subChain := range e.SubChainIDs {                                // For each ExtID
 		bytes = append(bytes, subChain.Bytes()...) // Put the ExtID's data in the slice
 	}
 
-	bytes = append(bytes, types.UInt16Bytes(uint16(len(e.ExtIDs)))...) // Put the number of ExtIDs in the slice
+	bytes = append(bytes, types.Uint16Bytes(uint16(len(e.ExtIDs)))...) // Put the number of ExtIDs in the slice
 	for _, extID := range e.ExtIDs {                                   // For each ExtID
-		bytes = append(bytes, types.UInt16Bytes(uint16(len(extID)))...) // Put its length in the slice
+		bytes = append(bytes, types.Uint16Bytes(uint16(len(extID)))...) // Put its length in the slice
 		bytes = append(bytes, extID.Bytes()...)                         // Put the ExtID's data in the slice
 	}
 	if e.Content != nil { // If we have content
-		bytes = append(bytes, types.UInt16Bytes(uint16(len(e.Content)))...) // Put the content length in the slice
+		bytes = append(bytes, types.Uint16Bytes(uint16(len(e.Content)))...) // Put the content length in the slice
 		bytes = append(bytes, e.Content.Bytes()...)                         // Put the content in the slice
 	} else { // If we don't have content
 		bytes = append(bytes, 0, 0) // If no content, put a uint16 0 down for its length

@@ -65,7 +65,7 @@ func BytesBool(data []byte) (f bool, newData []byte) {
 
 // Uint16Bytes
 // Marshal a int32 (big endian)
-func UInt16Bytes(i uint16) []byte {
+func Uint16Bytes(i uint16) []byte {
 	return append([]byte{}, byte(i>>8), byte(i))
 }
 
@@ -77,12 +77,12 @@ func BytesUint16(data []byte) (uint16, []byte) {
 
 // Uint32Bytes
 // Marshal a int32 (big endian)
-func UInt32Bytes(i uint32) []byte {
+func Uint32Bytes(i uint32) []byte {
 	return append([]byte{}, byte(i>>24), byte(i>>16), byte(i>>8), byte(i))
 }
 
 // BytesUint32
 // Unmarshal a uint32 (big endian)
-func BytesUInt32(data []byte) (uint32, []byte) {
-	return uint32(data[0])<<24 + uint32(data[1]<<16) + uint32(data[2])<<8 + uint32(data[3]), data[4:]
+func BytesUint32(data []byte) (uint32, []byte) {
+	return uint32(data[0])<<24 + uint32(data[1])<<16 + uint32(data[2])<<8 + uint32(data[3]), data[4:]
 }

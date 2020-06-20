@@ -21,11 +21,11 @@ type Node struct {
 	SubChainIDs []types.Hash       // SubChainIDs to build ChainID, Directory Block - zeros
 	Previous    types.Hash         // Hash of previous Block Header
 	IsNode      bool               // IsNode is true for a node, is false for an entry
-	MDRoot      types.Hash         // Merkle DAG of the entries of the List (only the hashes)
+	ListMDRoot      types.Hash         // Merkle DAG of the entries of the List (only the hashes)
 	List        []NEList           // List of ChainIDs/MDRoots for nodes/entries
 }
 */
-func TestMode(t *testing.T) {
+func TestNode(t *testing.T) {
 	n := new(Node)
 	n.Version = 1
 	n.BHeight = 232433
@@ -75,7 +75,7 @@ func TestMode(t *testing.T) {
 	if !n.SameAs(n2) {
 		t.Error("Did not unmarshal an ANode as expected")
 	}
-	expectedLen := 448
+	expectedLen := 440
 	if nodeLen != expectedLen {
 		t.Errorf("Length of data consumed (%d) not as expected (%d)", nodeLen, expectedLen)
 	}

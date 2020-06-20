@@ -7,7 +7,7 @@ package database
 //To use this DB interface, you must allocate a DB
 // Then call DB.Init(int)
 //
-// To set a value in the database, call DB.Set(bucket string, key []byte, value []byte) error
+// To set a value in the database, call DB.Put(bucket string, key []byte, value []byte) error
 //
 // To get a value from the database, call DB.Get(bucket string, key []byte) (value []byte)_
 //
@@ -75,10 +75,25 @@ func (d *DB) Get(bucket string, key []byte) (value []byte) {
 	return value
 }
 
-// Set
-// Set a key/value in the database.  We return an error if there was a problem
+// Put
+// Put a key/value in the database.  We return an error if there was a problem
 // writing the key/value pair to the database.
-func (d *DB) Set(bucket string, key []byte, value []byte) error {
+func (d *DB) Put(bucket string, key []byte, value []byte) error {
+	CKey := GetKey(bucket, key)
+
+	// Update the key/value in the database
+	err := d.badgerDB.Update(func(txn *badger.Txn) error {
+		err := txn.Set([]byte(CKey), value)
+		return err
+	})
+	return err
+}
+
+// PutInt
+// Put a key/value in the database, where the key is an index.  We return an error if there was a problem
+// writing the key/value pair to the database.
+func (d *DB) PutInt(bucket string, ikey int, value []byte) error {
+	key := types.Uint32Bytes(uint32(ikey))
 	CKey := GetKey(bucket, key)
 
 	// Update the key/value in the database

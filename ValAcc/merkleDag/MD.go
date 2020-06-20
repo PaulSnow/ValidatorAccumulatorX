@@ -15,7 +15,7 @@ type MD struct {
 // Returns the list of Hashes to be stored in the Database so we can create the MD for this
 // chain for this block.  In Factom, this is much like a EntryBlock
 func (m *MD) GetHashList() (list []byte) {
-	list = types.UInt32Bytes(uint32(len(m.HashList)))
+	list = types.Uint32Bytes(uint32(len(m.HashList)))
 	for _, v := range m.HashList {
 		list = append(list, v.Bytes()...)
 	}
@@ -55,7 +55,7 @@ func (m *MD) AddToChain(hash types.Hash) {
 // GetMDRoot
 // Close off the Merkle Directed Acyclic Graph (Merkle DAG or MD)
 // We take any trailing hashes in MD, hash them up and combine to create the Merkle Dag Root.
-// Getting the closing MDRoot is non-destructive, which is useful for some use cases.
+// Getting the closing ListMDRoot is non-destructive, which is useful for some use cases.
 func (m *MD) GetMDRoot() (MDRoot *types.Hash) {
 	// We go through m.MD and combine any left over hashes in m.MD with each other and the MR.
 	// If this is a power of two, that's okay because we will pick up the MR (a balanced MD) and

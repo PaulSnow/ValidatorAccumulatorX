@@ -5,21 +5,29 @@ Factom
 		DID + "MD" collects signed Accumulator MDRoots as produced
 
 
-                         __ Node Header
-   		Acc MDRoot ____/                     Node Header
-                        \__ Node MDRoot ___/
-                                            \___ Node MDRoot __ Entries
+                         __ Directory Block Node Header
+   		Acc MDRoot ____/                                     Node Header
+                        \__ Directory Block Node MDRoot ___/
+                                                           \___ Node MDRoot __ Entries
 
-         Node
-            version
-            Block Height
-            TimeStamp
-            ChainID
-		    Previous Node Header
-            Node MDRoot
-			Flag SubNodes/Entries
-			Size of List
-            List of SubNodes/Entries
+         type Node struct {
+         	Version     types.VersionField // Version of this data structure
+         	BHeight     types.BlockHeight  // Block Height
+         	SequenceNum types.Sequence     // Sequence Number for this chain of nodes
+         	TimeStamp   types.TimeStamp    // TimeStamp by Accumulator when the structure was built
+         	ChainID     types.Hash         // The ChainID (Directory Block - zeros, SubNodes - 1st ChainID, Entries - ChainID)
+         	SubChainIDs []types.Hash       // SubChainIDs to build ChainID, Directory Block - zeros
+         	Previous    types.Hash         // Hash of previous Block Header
+         	IsNode      bool               // IsNode is true for a node, is false for an entry
+         	MDRoot      types.Hash         // Merkle DAG of the entries of the List (only the hashes)
+         	List        []NEList           // List of ChainIDs/MDRoots for nodes/entries
+         }
+
+         Buckets                 key                      value
+         Node Head               node.ChainID             node.Marshal()
+         Node                    node.GetHash()           node.Marshal()
+         Directory Block Height  node.BHeight             node.Marshal()
+         Entries                 entry.GetHash()          entry.Marshal()
 
 
 

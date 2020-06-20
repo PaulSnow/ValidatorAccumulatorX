@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/database"
 	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
 )
 
@@ -20,8 +21,10 @@ import (
 //      SequenceNum             uint32
 //      TimeStamp				int64
 //      ChainID					[32]byte
+//      len(SubChainIDs)        uint16
+//        SubChainID            [32]byte
 //		Previous Node Header	[32]byte
-//		SubNode/Entries flag	uint8
+//		IsNode        		    uint8      1 is true (this is a node), 0 is false (this is an entry node)
 //		List MDRoot             [32]byte
 //		Len(List)				uint32
 //		List (SubNodes/Entries)
@@ -37,7 +40,7 @@ type Node struct {
 	SubChainIDs []types.Hash       // SubChainIDs to build ChainID, Directory Block - zeros
 	Previous    types.Hash         // Hash of previous Block Header
 	IsNode      bool               // IsNode is true for a node, is false for an entry
-	MDRoot      types.Hash         // Merkle DAG of the entries of the List (only the hashes)
+	ListMDRoot  types.Hash         // Merkle DAG of the entries of the List (only the hashes)
 	List        []NEList           // List of ChainIDs/MDRoots for nodes/entries
 }
 
@@ -46,6 +49,18 @@ type Node struct {
 type NEList struct {
 	ChainID types.Hash // Chain or SubChain ID that leads to a node, or a ChainID that leads to an ANode
 	MDRoot  types.Hash // Merkle Dag of either sub nodes or entries
+}
+
+// Put this node into the database
+func (n Node) Put(db database.DB) error {
+	if len(n.SubChainIDs) == 0 {
+		marshal := n.Marshal()
+		if marshal == nil {
+			return errors.New("failed to marshal node")
+		}
+		db.PutInt(types.DirectoryBlockHeight, int(n.BHeight), n.Marshal())
+	}
+	return nil
 }
 
 // SameAs
@@ -80,7 +95,7 @@ func (n Node) SameAs(n2 Node) bool {
 	if n.IsNode != n2.IsNode {
 		return false
 	}
-	if n.MDRoot != n2.MDRoot {
+	if n.ListMDRoot != n2.ListMDRoot {
 		return false
 	}
 	if len(n.List) != len(n2.List) {
@@ -115,18 +130,14 @@ func (n Node) Marshal() (bytes []byte) {
 	bytes = append(bytes, n.SequenceNum.Bytes()...)
 	bytes = append(bytes, n.TimeStamp.Bytes()...)
 	bytes = append(bytes, n.ChainID.Bytes()...)                             // Put the ChainID into the slice
-	bytes = append(bytes, types.UInt16Bytes(uint16(len(n.SubChainIDs)))...) // Put the number of SubChains
+	bytes = append(bytes, types.Uint16Bytes(uint16(len(n.SubChainIDs)))...) // Put the number of SubChains
 	for _, subChain := range n.SubChainIDs {                                // For each SubChain
 		bytes = append(bytes, subChain.Bytes()...) // Put the ExtID's data in the slice
 	}
 	bytes = append(bytes, n.Previous.Bytes()...)
-	if n.IsNode {
-		bytes = append(bytes, 1)
-	} else {
-		bytes = append(bytes, 0)
-	}
-	bytes = append(bytes, n.MDRoot.Bytes()...)
-	bytes = append(bytes, types.UInt32Bytes(uint32(len(n.List)))...) // Put the number of SubChains
+	bytes = append(bytes, types.BoolBytes(n.IsNode)...)
+	bytes = append(bytes, n.ListMDRoot.Bytes()...)
+	bytes = append(bytes, types.Uint32Bytes(uint32(len(n.List)))...) // Put the number of List Entries
 	for _, list := range n.List {                                    // For each SubChain
 		bytes = append(bytes, list.ChainID.Bytes()...) // Chain/SubChain ID
 		bytes = append(bytes, list.MDRoot.Bytes()...)  // MD of the sub node or entry
@@ -145,6 +156,20 @@ func (n Node) GetHash() (hash *types.Hash) {
 	hs := sha256.Sum256(h) // Get the array holding the hash (so we can create a slice)
 	hash.Extract(hs[:])    // Populate the Hash object
 	return hash            // Return a pointer to the Hash object.
+}
+
+// GetMDRoot
+// The MDRoot is the combination of the header on the left, and the listMDRoot on the right.
+// Returns a nil if the MDRoot doesn't exist do to missing data
+func (n Node) GetMDRoot() (mdRoot *types.Hash) {
+	headerHash := n.GetHash()
+	if headerHash == nil {
+		return nil
+	}
+	mdr := types.Hash{}
+	th := sha256.Sum256(append(headerHash.Bytes(), n.ListMDRoot.Bytes()...))
+	mdr.Extract(th[:])
+	return &mdr
 }
 
 // Unmarshal
@@ -176,10 +201,10 @@ func (n *Node) Unmarshal(data []byte) (dataConsumed int, err error) {
 	}
 	data = n.Previous.Extract(data)
 	n.IsNode, data = types.BytesBool(data) // Extract the node/entries flag
-	data = n.MDRoot.Extract(data)
+	data = n.ListMDRoot.Extract(data)
 	// Pull out all the List entries
 	var listLen uint32
-	listLen, data = types.BytesUInt32(data)
+	listLen, data = types.BytesUint32(data)
 	for i := uint32(0); i < listLen; i++ {
 		ne := new(NEList)
 		data = ne.ChainID.Extract(data)
