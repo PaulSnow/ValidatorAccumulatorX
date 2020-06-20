@@ -9,13 +9,13 @@ import (
 	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
 )
 
-// Entry
+// ANode
 // Data is entered into system by the Accumulator as a series of entries organized by chainIDs
 // Unlike Factom, we will attempt to create a chain if the ChainID provided is nil.  We provide
 // a function to compute the ChainID from the first entry in a chain, for use by applications.
 // If a chain already exists, creating the chain will be ignored.
 //
-// Entry
+// ANode
 //    Version          uint8
 //    TimeStamp        uint64
 //    ChainID          [32]byte
@@ -29,7 +29,7 @@ import (
 //      ExtID             []byte
 //    len(content)     uint16
 //    Content          []byte
-type Entry struct {
+type ANode struct {
 	Version     types.VersionField // Version of this data structure
 	TimeStamp   types.TimeStamp    // Timestamp of the construction of this entry
 	ChainID     types.Hash         // The ChainID
@@ -39,7 +39,7 @@ type Entry struct {
 }
 
 // SameAs
-func (e Entry) SameAs(e2 Entry) bool {
+func (e ANode) SameAs(e2 ANode) bool {
 	if e.Version != e2.Version {
 		return false
 	}
@@ -71,9 +71,9 @@ func (e Entry) SameAs(e2 Entry) bool {
 // Marshal
 // Convert the given entry into a byte slice. Add to that the SubChainIDs of the ChainID. Returns nil
 // if anything goes wrong while marshaling
-func (e Entry) Marshal() (bytes []byte) {
+func (e ANode) Marshal() (bytes []byte) {
 
-	// On any error, return a nil for the byte representation of the Entry
+	// On any error, return a nil for the byte representation of the ANode
 	defer func() {
 		if r := recover(); r != nil {
 			bytes = nil
@@ -106,10 +106,10 @@ func (e Entry) Marshal() (bytes []byte) {
 }
 
 // GetHash
-// Returns the EntryHash for this entry.  Note the Entry Hash does not include the SubChainIDs
-func (e Entry) GetHash() (hash *types.Hash) {
+// Returns the EntryHash for this entry.  Note the ANode Hash does not include the SubChainIDs
+func (e ANode) GetHash() (hash *types.Hash) {
 	h := e.Marshal() // Get the bytes behind the EntryHash
-	if h == nil {    // A nil would mean the Entry didn't marshal
+	if h == nil {    // A nil would mean the ANode didn't marshal
 		return nil
 	} // If Marshal Fails, return a nil
 	hash = new(types.Hash) // Get the Hash object to return
@@ -121,19 +121,19 @@ func (e Entry) GetHash() (hash *types.Hash) {
 // Unmarshal
 // Extract an entry from a byte slice.  Returns an error if the unmarshal fails, or the length of the
 // data consumed and a nil.
-func (e *Entry) Unmarshal(data []byte) (dataConsumed int, err error) {
+func (e *ANode) Unmarshal(data []byte) (dataConsumed int, err error) {
 
 	// On any error, no data is consumed and return an error as to why unmarshal fails
 	defer func() {
 		if r := recover(); r != nil {
-			err = errors.New(fmt.Sprintf("Entry Failed to unmarshal %v", r))
+			err = errors.New(fmt.Sprintf("ANode Failed to unmarshal %v", r))
 		}
 	}()
 	d := data                          // d keeps the original slice
 	data = e.Version.Extract(data)     // Extract the version
 	data = e.TimeStamp.Extract(data)   // Extract the TimeStamp
 	data = e.ChainID.Extract(data)     // Extract the ChainID
-	e.SubChainIDs = e.SubChainIDs[0:0] // Clear any ExtIDs that might already be in this Entry
+	e.SubChainIDs = e.SubChainIDs[0:0] // Clear any ExtIDs that might already be in this ANode
 
 	// Pull out all the subChain IDs
 	var numSubChains uint16
@@ -163,7 +163,7 @@ func (e *Entry) Unmarshal(data []byte) (dataConsumed int, err error) {
 }
 
 // EntryHash
-// The accumulator assumes the Entry has already been written to the (a) database.  It is only dealing with EntryHashes
+// The accumulator assumes the ANode has already been written to the (a) database.  It is only dealing with EntryHashes
 type EntryHash struct {
 	NewChain  bool         // Create a chain.  If the chain already exists, entry is ignored
 	SubChains []types.Hash // SubChainIDs used to create the ChainID

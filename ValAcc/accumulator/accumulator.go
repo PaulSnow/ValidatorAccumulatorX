@@ -32,7 +32,7 @@ type Accumulator struct {
 // useful digital IDs into the accumulator structure to ensure the integrity of the data
 // collected.
 func (a *Accumulator) Init(chainID *types.Hash) (
-	EntryFeed chan node.EntryHash, // Return the EntryFeed channel to send Entry Hashes to the accumulator
+	EntryFeed chan node.EntryHash, // Return the EntryFeed channel to send ANode Hashes to the accumulator
 	control chan bool, // The control channel signals End of Block to the accumulator
 	mdFeed chan *types.Hash) { // the Merkle DAG Feed (mdFeed) returns block merkle DAG roots
 
@@ -66,7 +66,7 @@ func (a *Accumulator) Run() {
 				if ctl {
 					break block // Break block processing
 				}
-			case entry := <-a.entryFeed: // Get the next Entry
+			case entry := <-a.entryFeed: // Get the next ANode
 				chain := a.chains[entry.ChainID] // See if we have a chain for it
 				if chain == nil {                // If we don't have a chain for it, then we add one to our tmp state
 					chain = NewChainAcc()           // Create our collector for this chain

@@ -11,7 +11,7 @@ import (
 )
 
 func TestEntry(t *testing.T) {
-	e := new(Entry)
+	e := new(ANode)
 	e.Version = 1
 	e.TimeStamp = types.TimeStamp(time.Now().Unix())
 
@@ -44,18 +44,18 @@ func TestEntry(t *testing.T) {
 	e.Content = []byte{}
 	entrySlice := e.Marshal()
 	if entrySlice == nil {
-		t.Error("Failed to marshal an Entry")
+		t.Error("Failed to marshal an ANode")
 	}
-	var e2 Entry
+	var e2 ANode
 	len, err := e2.Unmarshal(entrySlice)
 	if err != nil {
-		t.Error("Failed to unmarshal an Entry")
+		t.Error("Failed to unmarshal an ANode")
 	}
 	if !e.SameAs(e2) {
-		t.Error("Did not unmarshal an Entry as expected")
+		t.Error("Did not unmarshal an ANode as expected")
 	}
 	expectedLen := 220
-	if len != 220 {
+	if len != expectedLen {
 		t.Errorf("Length of data consumed (%d) not as expected (%d)", len, expectedLen)
 	}
 }

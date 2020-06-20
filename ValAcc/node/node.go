@@ -8,7 +8,7 @@ import (
 	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
 )
 
-// Entry
+// ANode
 // Data is entered into system by the Accumulator as a series of entries organized by chainIDs
 // Unlike Factom, we will attempt to create a chain if the ChainID provided is nil.  We provide
 // a function to compute the ChainID from the first entry in a chain, for use by applications.
@@ -17,6 +17,7 @@ import (
 // Node
 //      Version					uint8
 //      Block Height			uint32
+//      SequenceNum             uint32
 //      TimeStamp				int64
 //      ChainID					[32]byte
 //		Previous Node Header	[32]byte
@@ -25,11 +26,12 @@ import (
 //		Len(List)				uint32
 //		List (SubNodes/Entries)
 //			Chain/SubChain ID	[32]byte     Sorted by Chain/SubChain ID
-//			Node/Entry Hash     [32]byte
+//			Node/ANode Hash     [32]byte
 
 type Node struct {
 	Version     types.VersionField // Version of this data structure
 	BHeight     types.BlockHeight  // Block Height
+	SequenceNum types.Sequence     // Sequence Number for this chain of nodes
 	TimeStamp   types.TimeStamp    // TimeStamp by Accumulator when the structure was built
 	ChainID     types.Hash         // The ChainID (Directory Block - zeros, SubNodes - 1st ChainID, Entries - ChainID)
 	SubChainIDs []types.Hash       // SubChainIDs to build ChainID, Directory Block - zeros
@@ -40,9 +42,9 @@ type Node struct {
 }
 
 // NEList
-// Node Entry List (NEList) is a struct of a ChainID and a Node or Entry Hash
+// Node ANode List (NEList) is a struct of a ChainID and a Node or ANode Hash
 type NEList struct {
-	ChainID types.Hash // Chain or SubChain ID that leads to a node, or a ChainID that leads to an Entry
+	ChainID types.Hash // Chain or SubChain ID that leads to a node, or a ChainID that leads to an ANode
 	MDRoot  types.Hash // Merkle Dag of either sub nodes or entries
 }
 
@@ -53,6 +55,9 @@ func (n Node) SameAs(n2 Node) bool {
 		return false
 	}
 	if n.BHeight != n2.BHeight {
+		return false
+	}
+	if n.SequenceNum != n2.SequenceNum {
 		return false
 	}
 	if n.TimeStamp != n2.TimeStamp {
@@ -97,7 +102,7 @@ func (n Node) SameAs(n2 Node) bool {
 // if anything goes wrong while marshaling
 func (n Node) Marshal() (bytes []byte) {
 
-	// On any error, return a nil for the byte representation of the Entry
+	// On any error, return a nil for the byte representation of the ANode
 	defer func() {
 		if r := recover(); r != nil {
 			bytes = nil
@@ -107,9 +112,10 @@ func (n Node) Marshal() (bytes []byte) {
 
 	bytes = append(bytes, n.Version.Bytes()...) // Put the version into the slice
 	bytes = append(bytes, n.BHeight.Bytes()...)
+	bytes = append(bytes, n.SequenceNum.Bytes()...)
 	bytes = append(bytes, n.TimeStamp.Bytes()...)
 	bytes = append(bytes, n.ChainID.Bytes()...)                             // Put the ChainID into the slice
-	bytes = append(bytes, types.UInt32Bytes(uint32(len(n.SubChainIDs)))...) // Put the number of SubChains
+	bytes = append(bytes, types.UInt16Bytes(uint16(len(n.SubChainIDs)))...) // Put the number of SubChains
 	for _, subChain := range n.SubChainIDs {                                // For each SubChain
 		bytes = append(bytes, subChain.Bytes()...) // Put the ExtID's data in the slice
 	}
@@ -132,7 +138,7 @@ func (n Node) Marshal() (bytes []byte) {
 // Return the hash for this sub node or entry node
 func (n Node) GetHash() (hash *types.Hash) {
 	h := n.Marshal() // Get the bytes behind the EntryHash
-	if h == nil {    // A nil would mean the Entry didn't marshal
+	if h == nil {    // A nil would mean the ANode didn't marshal
 		return nil
 	}
 	hash = new(types.Hash) // Get the Hash object to return
@@ -149,16 +155,17 @@ func (n *Node) Unmarshal(data []byte) (dataConsumed int, err error) {
 	// On any error, no data is consumed and return an error as to why unmarshal fails
 	defer func() {
 		if r := recover(); r != nil {
-			err = errors.New(fmt.Sprintf("Entry Failed to unmarshal %v", r))
+			err = errors.New(fmt.Sprintf("ANode Failed to unmarshal %v", r))
 		}
 	}()
 	d := data // d keeps the original slice
 
 	data = n.Version.Extract(data)     // Extract the version
 	data = n.BHeight.Extract(data)     // Extract the BlockHeight
+	data = n.SequenceNum.Extract(data) // Extract the BlockHeight
 	data = n.TimeStamp.Extract(data)   // Extract the TimeStamp
 	data = n.ChainID.Extract(data)     // Extract the ChainID
-	n.SubChainIDs = n.SubChainIDs[0:0] // Clear any ExtIDs that might already be in this Entry
+	n.SubChainIDs = n.SubChainIDs[0:0] // Clear any ExtIDs that might already be in this ANode
 	// Pull out all the subChain IDs
 	var numSubChains uint16
 	numSubChains, data = types.BytesUint16(data) // Get the number of SubChainIDs we should have
