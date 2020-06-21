@@ -6,6 +6,8 @@ import (
 	"sort"
 	"time"
 
+	"github.com/dustin/go-humanize"
+
 	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/database"
 
 	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/merkleDag"
@@ -96,19 +98,16 @@ func (a *Accumulator) Run() {
 
 		var chainEntries []node.NEList
 		for _, v := range a.chains {
-			// Okay, we are ready to update the ListMDRoot
-			// ToDo:  This isn't entirely correct.  It works for Directory Blocks of Entry Blocks,
-			// ToDo:  but not for Directory Blocks with sub nodes of Entry Blocks.
-			if !v.Node.IsNode {
-				v.Node.ListMDRoot = *v.MD.GetMDRoot()
-				v.Node.EntryList = v.MD.HashList
-				v.Node.Put(a.DB)
-			} else {
-				ne := new(node.NEList)
-				ne.ChainID = v.Node.ChainID
-				ne.MDRoot = v.Node.ListMDRoot
-				chainEntries = append(chainEntries, *ne)
-			}
+			v.Node.ListMDRoot = *v.MD.GetMDRoot()
+			v.Node.EntryList = v.MD.HashList
+			v.Node.IsNode = false
+			v.Node.Put(a.DB)
+
+			ne := new(node.NEList)
+			ne.ChainID = v.Node.ChainID
+			ne.MDRoot = v.Node.ListMDRoot
+			chainEntries = append(chainEntries, *ne)
+
 		}
 
 		sort.Slice(chainEntries, func(i, j int) bool {
@@ -123,7 +122,11 @@ func (a *Accumulator) Run() {
 		}
 		total += sum
 		secs := time.Now().Unix() - start.Unix()
-		fmt.Printf("%15d Entries in block, %15d tps in run \n", sum, int64(total)/secs)
+		fmt.Printf("%15s Elapsed Time, %15s Total Entries, %15s Entries in block, %15s tps in run \n",
+			time.Now().Sub(start).String(),
+			humanize.Comma(int64(total)),
+			humanize.Comma(int64(sum)),
+			humanize.Comma(int64(total)/secs))
 
 		// Calculate the ListMDRoot for all the accumulated MDRoots for all the chains
 		MDAcc := new(merkleDag.MD)
