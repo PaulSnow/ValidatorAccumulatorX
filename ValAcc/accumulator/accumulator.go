@@ -6,6 +6,8 @@ import (
 	"sort"
 	"time"
 
+	"github.com/FactomProject/factomd/util/atomic"
+
 	"github.com/dustin/go-humanize"
 
 	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/database"
@@ -72,6 +74,8 @@ func (a *Accumulator) Run() {
 	var total int
 	start := time.Now()
 
+	var goWrites atomic.AtomicInt
+
 	for {
 		// While we are processing a block
 	block:
@@ -82,6 +86,7 @@ func (a *Accumulator) Run() {
 			select {
 			case ctl := <-a.control: // Have we been asked to end the block?
 				if ctl {
+					println("Processing EOB")
 					break block // Break block processing
 				}
 			case entry := <-a.entryFeed: // Get the next ANode
@@ -96,12 +101,23 @@ func (a *Accumulator) Run() {
 			}
 		}
 
+		for goWrites.Load() > 0 {
+			fmt.Println("Waiting on", goWrites.Load(), "database updates.")
+			time.Sleep(1 * time.Second)
+		}
+
 		var chainEntries []node.NEList
 		for _, v := range a.chains {
 			v.Node.ListMDRoot = *v.MD.GetMDRoot()
 			v.Node.EntryList = v.MD.HashList
 			v.Node.IsNode = false
-			v.Node.Put(a.DB)
+
+			tNode := v.Node
+			go func() {
+				goWrites.Add(1)
+				tNode.Put(a.DB)
+				goWrites.Add(-1)
+			}()
 
 			ne := new(node.NEList)
 			ne.ChainID = v.Node.ChainID
@@ -115,7 +131,6 @@ func (a *Accumulator) Run() {
 		})
 
 		// Print some statistics
-		println("\n===========================\n")
 		var sum int
 		for _, v := range a.chains {
 			sum += len(v.MD.HashList)

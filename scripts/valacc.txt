@@ -1,0 +1,354 @@
+
+=========================
+Running a test with: entry limit of 400,000 chain limit of 1 tps limit of 5,500
+=========================
+
+EOB 1
+  10.079637178s Elapsed Time,          43,726 Total Entries,          43,726 Entries in block,           4,372 tps in run 
+MD: 0bebeea5e3211a0eee662d5490deadbe73978101ec11b5e9bd6704cad37deabf
+EOB 2
+  20.187814985s Elapsed Time,          99,242 Total Entries,          55,516 Entries in block,           4,962 tps in run 
+MD: fcfd2a5501c9663a6bd085506aafa38b96f01907149c68c3e8aa768f68c961da
+EOB 3
+  30.214868633s Elapsed Time,         153,763 Total Entries,          54,521 Entries in block,           5,125 tps in run 
+MD: f2633ccb0188a5c0ecf771aca9add1c6c201bb37d77441687a11a4621b1b4fc2
+EOB 4
+  40.320076733s Elapsed Time,         208,563 Total Entries,          54,800 Entries in block,           5,086 tps in run 
+MD: 44ae53e2ca17a1b26d2dbe060cdcfe4ebc82552c097de8b148b82ecbb1ac7ffa
+EOB 5
+  50.420308311s Elapsed Time,         262,971 Total Entries,          54,408 Entries in block,           5,156 tps in run 
+MD: 329f636ac9986b35a6681151f6077627a59062ee18c43d85d90321f6a3992df2
+EOB 6
+ 1m0.451085811s Elapsed Time,         317,094 Total Entries,          54,123 Entries in block,           5,198 tps in run 
+MD: c9d6c50ea278689d13a304db0a08dd6c0362a6333cdfa0f081802d81b7be586d
+EOB 7
+1m10.468795091s Elapsed Time,         370,999 Total Entries,          53,905 Entries in block,           5,225 tps in run 
+MD: 9d48b9d4e4c649328d7128c6fb05eb428f41a583b5511f496301c36ae0ba6a20
+EOB 8
+1m20.490256763s Elapsed Time,         400,000 Total Entries,          29,001 Entries in block,           4,938 tps in run 
+
+====================
+Recorded 400,000 Entries in 8 Blocks
+Test complete.
+
+=========================
+Running a test with: entry limit of 400,000 chain limit of 10,000 tps limit of 5,500
+=========================
+
+EOB 1
+  10.125994012s Elapsed Time,          41,418 Total Entries,          41,418 Entries in block,           4,141 tps in run 
+MD: c8ee519f81bc7176f76b7af269d4c65c297896efd630b91bf2bc149789e02bf1
+EOB 2
+  20.414824908s Elapsed Time,          97,057 Total Entries,          55,639 Entries in block,           4,852 tps in run 
+MD: 270480569ae2794b882ab0de80a5b852ea22b31b585b016ca95a2fcec0c6cf6c
+EOB 3
+  30.763468807s Elapsed Time,         152,416 Total Entries,          55,359 Entries in block,           5,080 tps in run 
+MD: 9a1b9b844d246970437cb73528a920dbc98075b15076932f14d0b2c740416536
+EOB 4
+  41.069854666s Elapsed Time,         207,913 Total Entries,          55,497 Entries in block,           5,071 tps in run 
+MD: 0932d2dd1757c93201a48b5b0db6cbcec8ba2f77d4450ef1d88cab73dbc6ac07
+EOB 5
+  51.471246434s Elapsed Time,         264,249 Total Entries,          56,336 Entries in block,           5,181 tps in run 
+MD: a2ce8398131c9c862b67ec6867fb1e0c41b419aa6f1cd57dddda8de259884fef
+EOB 6
+ 1m1.821445916s Elapsed Time,         320,417 Total Entries,          56,168 Entries in block,           5,168 tps in run 
+MD: 31c118b9fb7c0ae4d07cd911b6dc5bb5752d3f4b40698581e8aaa9a09377bdad
+EOB 7
+1m12.200140591s Elapsed Time,         377,497 Total Entries,          57,080 Entries in block,           5,243 tps in run 
+MD: 858dd387f7f22f984f38ad3abf302a7e12f61a41d1d4d36a08a9931843d3b921
+EOB 8
+1m22.521282374s Elapsed Time,         400,000 Total Entries,          22,503 Entries in block,           4,878 tps in run 
+
+====================
+Recorded 400,000 Entries in 8 Blocks
+Test complete.
+
+=========================
+Running a test with: entry limit of 400,000 chain limit of 100,000 tps limit of 5,500
+=========================
+
+EOB 1
+  10.202800287s Elapsed Time,          42,906 Total Entries,          42,906 Entries in block,           4,290 tps in run 
+MD: 5cda6f775836ebbf36cce4bdf37ceafc573b8ffb5befd4d4dafe0cfdad4f6368
+EOB 2
+  21.201479239s Elapsed Time,         102,463 Total Entries,          59,557 Entries in block,           4,879 tps in run 
+MD: 06b8e4ba1b331a83c4f7cb3438c6dbfb4a559f0631b50258262b03b46695ee49
+EOB 3
+  32.529282564s Elapsed Time,         161,527 Total Entries,          59,064 Entries in block,           5,047 tps in run 
+MD: ac44035291b4d3eb6af8a4949db8a2eddf1c70d4c33ff8970291719b0f4aa981
+EOB 4
+  43.853805229s Elapsed Time,         222,205 Total Entries,          60,678 Entries in block,           5,167 tps in run 
+MD: 7a8c09367c157daca3544b3d2ec01af8dcf269d481b09f01e7cc46b682a475d5
+EOB 5
+  55.251446559s Elapsed Time,         283,268 Total Entries,          61,063 Entries in block,           5,150 tps in run 
+MD: 9c958d192d94b669fad81b21ed8c40405707dfdece827c039446b519c8ec801d
+EOB 6
+ 1m6.813266741s Elapsed Time,         344,586 Total Entries,          61,318 Entries in block,           5,221 tps in run 
+MD: c5d28dff7ec0042b22d65ed621b3b853be31c35cef912f994e8d630582a15589
+EOB 7
+1m18.516289378s Elapsed Time,         400,000 Total Entries,          55,414 Entries in block,           5,128 tps in run 
+
+====================
+Recorded 400,000 Entries in 7 Blocks
+Test complete.
+
+=========================
+Running a test with: entry limit of 400,000 chain limit of 200,000 tps limit of 5,500
+=========================
+
+EOB 1
+  10.265027767s Elapsed Time,          43,195 Total Entries,          43,195 Entries in block,           3,926 tps in run 
+MD: e4f0cc27947005d19bb03a1082b2750875827b1c1936b4c9aa35974d028bd7bf
+EOB 2
+  21.445950663s Elapsed Time,         102,720 Total Entries,          59,525 Entries in block,           4,669 tps in run 
+MD: bf939ace048fbd766dac4eb36580863749fafcc5af6cefd4c71982d611de68e0
+EOB 3
+  33.065002961s Elapsed Time,         164,457 Total Entries,          61,737 Entries in block,           4,983 tps in run 
+MD: a6da87282c51c1acbb4dc8787335abb73417fea8f5e4df13a83e654557068f82
+EOB 4
+  44.919270013s Elapsed Time,         227,919 Total Entries,          63,462 Entries in block,           5,064 tps in run 
+MD: 5614c6ebc3f351e67d51f8d394f108eb3ceddf57ca1b1deceaa45318497f317f
+EOB 5
+   56.36583349s Elapsed Time,         289,499 Total Entries,          61,580 Entries in block,           5,078 tps in run 
+MD: c5a73e1b457e850ff89b75d4d7677a71ad443e82a49897fc59d762abd327c0bd
+EOB 6
+ 1m8.189685557s Elapsed Time,         352,044 Total Entries,          62,545 Entries in block,           5,102 tps in run 
+MD: 95fe259b99b7c011fe90f398f57c2aee2c18bb73e37be06c6c91b448de39a492
+EOB 7
+1m19.801866861s Elapsed Time,         400,000 Total Entries,          47,956 Entries in block,           5,000 tps in run 
+
+====================
+Recorded 400,000 Entries in 7 Blocks
+Test complete.
+
+=========================
+Running a test with: entry limit of 400,000 chain limit of 300,000 tps limit of 5,500
+=========================
+
+EOB 1
+  10.276298492s Elapsed Time,          43,741 Total Entries,          43,741 Entries in block,           3,976 tps in run 
+MD: 631ed7d35aafc7807a1fb0fbaf185a40e6cd29aa97a7ab425d920451b7f1b290
+EOB 2
+  21.306592031s Elapsed Time,         101,845 Total Entries,          58,104 Entries in block,           4,629 tps in run 
+MD: 977cfab18e445aa063fb02e8e259e5b711a24b4742aebe3d2bc95e57ecc73db5
+EOB 3
+  32.902276341s Elapsed Time,         162,794 Total Entries,          60,949 Entries in block,           4,933 tps in run 
+MD: d2c5944305aa36613f3758e898c2723ea611e81d9d237e85a6597c65a4a74585
+EOB 4
+  44.675002566s Elapsed Time,         224,288 Total Entries,          61,494 Entries in block,           4,984 tps in run 
+MD: 2c336c7817615e5a2fd9b21726c44911200eeb3b6b7b13570b9cca1c8d90dbd6
+EOB 5
+  56.496037387s Elapsed Time,         287,440 Total Entries,          63,152 Entries in block,           5,042 tps in run 
+MD: 7cbbcf0b153a645fa040f569299d6298a771ee4774073618dca9a2e5c3f37328
+EOB 6
+ 1m8.416723838s Elapsed Time,         351,596 Total Entries,          64,156 Entries in block,           5,095 tps in run 
+MD: a3bb7d18a1a5c35698e0be609a5927eded7170c25e14f5ff2e43bf754042a822
+EOB 7
+1m20.177315291s Elapsed Time,         400,000 Total Entries,          48,404 Entries in block,           4,938 tps in run 
+
+====================
+Recorded 400,000 Entries in 7 Blocks
+Test complete.
+
+=========================
+Running a test with: entry limit of 400,000 chain limit of 400,000 tps limit of 5,500
+=========================
+
+EOB 1
+  10.237636215s Elapsed Time,          41,683 Total Entries,          41,683 Entries in block,           4,168 tps in run 
+MD: f7d7be9ec9864067c8c03d61c55cffca52d3dc4363780f98636a3146660ffc4f
+EOB 2
+  21.131018994s Elapsed Time,          98,312 Total Entries,          56,629 Entries in block,           4,681 tps in run 
+MD: d9b0d91ab93658a2c61d2943ced96a323bb5359894ca73290250f38d4166e4cd
+EOB 3
+  32.730775028s Elapsed Time,         157,763 Total Entries,          59,451 Entries in block,           4,780 tps in run 
+MD: 4f59dc44d0d9b2fca5af41ed6f7ac328c9780b83b6659384e123aa10b4474c03
+EOB 4
+  44.415522661s Elapsed Time,         218,319 Total Entries,          60,556 Entries in block,           4,961 tps in run 
+MD: b033ba74fb7c16d9cafa6de505b85f61bce476a08326faff3b3124319d6d3ea8
+EOB 5
+  56.290584547s Elapsed Time,         280,503 Total Entries,          62,184 Entries in block,           5,008 tps in run 
+MD: 45f36b81fabf3943d2cd6a3fd06f6b83991ecc50c0bcc2ca2c09adb3064e9bf7
+EOB 6
+ 1m8.174939501s Elapsed Time,         342,554 Total Entries,          62,051 Entries in block,           5,037 tps in run 
+MD: a60a17cff8c18489b3259c314c6ad17448186a38d47e428e3b46ab2bb8627ffc
+EOB 7
+1m19.901513983s Elapsed Time,         400,000 Total Entries,          57,446 Entries in block,           5,000 tps in run 
+
+====================
+Recorded 400,000 Entries in 7 Blocks
+Test complete.
+
+=========================
+Running a test with: entry limit of 400,000 chain limit of 500,000 tps limit of 5,500
+=========================
+
+EOB 1
+  10.198676191s Elapsed Time,          42,491 Total Entries,          42,491 Entries in block,           3,862 tps in run 
+MD: cc3dbefb8ade24164b8d329d7b262cd2589d4902cfe1783661be44d2ece15ed9
+EOB 2
+  21.140134583s Elapsed Time,          99,906 Total Entries,          57,415 Entries in block,           4,541 tps in run 
+MD: 7cf64f8121e6a8e53a7f47e1eca4eb7a9ae7c8e99f495da6763ded8a0b380408
+EOB 3
+  32.766362696s Elapsed Time,         160,389 Total Entries,          60,483 Entries in block,           4,860 tps in run 
+MD: e7b503df0d3aba870232a183a6187a2d6ecb67805a49d14121e90394369d9cd1
+EOB 4
+  44.498468015s Elapsed Time,         221,844 Total Entries,          61,455 Entries in block,           4,929 tps in run 
+MD: 91f398321a7a6a41ae8c6025189bb6d6641819769559b10943088a4c33b6522b
+EOB 5
+  56.382700335s Elapsed Time,         283,839 Total Entries,          61,995 Entries in block,           4,979 tps in run 
+MD: c8515935f1f6fcfb173fa8369af819b4d7a2a0e50caf5dfe186f121e98f3fff7
+EOB 6
+ 1m8.296775271s Elapsed Time,         347,101 Total Entries,          63,262 Entries in block,           5,030 tps in run 
+MD: fb1fc2bf2957cc3dcbd9108bca130d33fb9b8083754062c61535ad213e30768f
+EOB 7
+ 1m20.09974616s Elapsed Time,         400,000 Total Entries,          52,899 Entries in block,           5,000 tps in run 
+
+====================
+Recorded 400,000 Entries in 7 Blocks
+Test complete.
+
+=========================
+Running a test with: entry limit of 400,000 chain limit of 1,000,000 tps limit of 5,500
+=========================
+
+EOB 1
+  10.293509185s Elapsed Time,          42,356 Total Entries,          42,356 Entries in block,           4,235 tps in run 
+MD: 4a26db9e693d6f57a7a0f6a000824766a3bad16b1d31abf7723b97d5d5f09dc3
+EOB 2
+  21.517787836s Elapsed Time,         101,812 Total Entries,          59,456 Entries in block,           4,627 tps in run 
+MD: de2e260003ff7e244e38cbf37c8530c9047559d0cb3eee6903c7987bc2af9e9d
+EOB 3
+  33.304337952s Elapsed Time,         163,859 Total Entries,          62,047 Entries in block,           4,965 tps in run 
+MD: 9ba9c045c219b2851e4e2be3fad19ebdfa7be94c8d3cfa5ad31d321d97c11560
+EOB 4
+  45.131308071s Elapsed Time,         223,710 Total Entries,          59,851 Entries in block,           4,971 tps in run 
+MD: ea649f1146303357fcc43651df96c8c2f1d453af04309be7fe611bfbf409169d
+EOB 5
+  57.288883415s Elapsed Time,         284,415 Total Entries,          60,705 Entries in block,           4,989 tps in run 
+MD: 78f3cf40757ac97a2676951c105272f412e0c2a920dbddce005cc95be7e5d734
+EOB 6
+ 1m9.201134682s Elapsed Time,         346,480 Total Entries,          62,065 Entries in block,           5,021 tps in run 
+MD: 7aa4c4e85cb0f636d101e2aa8326a60d44bfcbb7d34bcb973c0921c3fb6f7d74
+EOB 7
+1m21.221566468s Elapsed Time,         400,000 Total Entries,          53,520 Entries in block,           4,938 tps in run 
+
+====================
+Recorded 400,000 Entries in 7 Blocks
+Test complete.
+
+=========================
+Running a test with: entry limit of 400,000 chain limit of 2,000,000 tps limit of 5,500
+=========================
+
+EOB 1
+  10.263986366s Elapsed Time,          42,513 Total Entries,          42,513 Entries in block,           4,251 tps in run 
+MD: 1eee7949833c589d39f6add419bfcd26c96403d2db3b71b678df85d66b333c6a
+EOB 2
+  21.459239614s Elapsed Time,         101,258 Total Entries,          58,745 Entries in block,           4,821 tps in run 
+MD: 6074df4aa57a88c8e0c87e72ac5ea885e40225d7014f1666538e2902d3787852
+EOB 3
+  33.279380352s Elapsed Time,         163,036 Total Entries,          61,778 Entries in block,           4,940 tps in run 
+MD: 2d7765c7adba53b71f558145ce282e346381d4a1c6d728847795bd7521fed16d
+EOB 4
+  44.906932179s Elapsed Time,         222,454 Total Entries,          59,418 Entries in block,           4,943 tps in run 
+MD: 42188cc90bcd1da00d74e5e701e17eeed1d362a61926720395812fe7c207f63d
+EOB 5
+  57.088551498s Elapsed Time,         284,155 Total Entries,          61,701 Entries in block,           4,985 tps in run 
+MD: 6c367f433b654bd542e126613a70a830b22c1bf56e858c3649ffb719c232dce0
+EOB 6
+ 1m8.920897004s Elapsed Time,         347,398 Total Entries,          63,243 Entries in block,           5,034 tps in run 
+MD: b444ddaa41cb5f5137ad0c99da15bae1110f95e798afab0b23a58e2f4f91d2b7
+EOB 7
+1m20.819561175s Elapsed Time,         400,000 Total Entries,          52,602 Entries in block,           4,938 tps in run 
+
+====================
+Recorded 400,000 Entries in 7 Blocks
+Test complete.
+
+=========================
+Running a test with: entry limit of 400,000 chain limit of 3,000,000 tps limit of 5,500
+=========================
+
+EOB 1
+  10.277793363s Elapsed Time,          42,210 Total Entries,          42,210 Entries in block,           4,221 tps in run 
+MD: 3d4088851aa1344d752ec1f02aa4f01fe2b647614d8c4fd74d547a958d08a0bf
+EOB 2
+  21.591133316s Elapsed Time,         101,402 Total Entries,          59,192 Entries in block,           4,609 tps in run 
+MD: ab355b7518f5767ab4e10f552225e2ad9f1d5a06564ae703fce765e02911b9ca
+EOB 3
+   33.13167318s Elapsed Time,         161,893 Total Entries,          60,491 Entries in block,           4,905 tps in run 
+MD: 6562039bbf50324ff2b53f1e81ceed6600802e50d1ab590668c4af55c9c13b75
+EOB 4
+  45.114888953s Elapsed Time,         224,149 Total Entries,          62,256 Entries in block,           4,981 tps in run 
+MD: e2da77baf8c7232d846952f19f42bd73d68775317feb7641dd65dae8d62f5622
+EOB 5
+  57.059455742s Elapsed Time,         287,331 Total Entries,          63,182 Entries in block,           5,040 tps in run 
+MD: bb5d0835664dc82091970400f5e93a5b35e19f5109da7edfc5fd2a9ef6a5b923
+EOB 6
+ 1m8.926586328s Elapsed Time,         350,226 Total Entries,          62,895 Entries in block,           5,075 tps in run 
+MD: 8005325338690e7716bf1d1f9684d56620c1a619bd6e626b637c1e8c0d0e47f2
+EOB 7
+ 1m20.52305645s Elapsed Time,         400,000 Total Entries,          49,774 Entries in block,           4,938 tps in run 
+
+====================
+Recorded 400,000 Entries in 7 Blocks
+Test complete.
+
+=========================
+Running a test with: entry limit of 400,000 chain limit of 4,000,000 tps limit of 5,500
+=========================
+
+EOB 1
+   10.28937458s Elapsed Time,          43,163 Total Entries,          43,163 Entries in block,           3,923 tps in run 
+MD: c52745d6d70f4295748814ac7d0a061863f81554967ee626b62aba0872e19a86
+EOB 2
+  21.634052953s Elapsed Time,         102,725 Total Entries,          59,562 Entries in block,           4,669 tps in run 
+MD: 8ba14b2662db8dcc8e67dce2405f7221169deef17a405c9eb5b8ac2f0f9e6a03
+EOB 3
+  33.486577885s Elapsed Time,         164,327 Total Entries,          61,602 Entries in block,           4,833 tps in run 
+MD: f6534607a33b0d38b52c76463efac305ba0a1091b775034917b5fb6d7dd044ed
+EOB 4
+  45.451240092s Elapsed Time,         226,832 Total Entries,          62,505 Entries in block,           4,931 tps in run 
+MD: 0cc4ac4b0248f6e555bfafe6491b449f27a7916868be74ccb1b647e8497ec53c
+EOB 5
+  57.492373142s Elapsed Time,         289,187 Total Entries,          62,355 Entries in block,           4,985 tps in run 
+MD: 652dca036f1ca3039b34977d5e1121d71dde181292deaedffb9fcc4f65cc6d88
+EOB 6
+  1m9.43852648s Elapsed Time,         352,620 Total Entries,          63,433 Entries in block,           5,037 tps in run 
+MD: a59693c8be9c062c2852408604a9be49d3e6cc0e23cb234b1151464e946d3771
+EOB 7
+1m21.315828962s Elapsed Time,         400,000 Total Entries,          47,380 Entries in block,           4,878 tps in run 
+
+====================
+Recorded 400,000 Entries in 7 Blocks
+Test complete.
+
+=========================
+Running a test with: entry limit of 400,000 chain limit of 5,000,000 tps limit of 5,500
+=========================
+
+EOB 1
+  10.310715424s Elapsed Time,          44,317 Total Entries,          44,317 Entries in block,           4,431 tps in run 
+MD: fe31003eb9d61b353ed49d6f2195d0533d55eec6d78f9d6c696b4a13bc98ed40
+EOB 2
+  21.715371695s Elapsed Time,         103,341 Total Entries,          59,024 Entries in block,           4,697 tps in run 
+MD: 5f5571c38191dc47c70781710a30cfc3bfb326ef05f05c3999ea6468e6a1f96f
+EOB 3
+  33.545844893s Elapsed Time,         165,566 Total Entries,          62,225 Entries in block,           5,017 tps in run 
+MD: c8ec8943e66f437ed9fbc02413f6be75292d986abed86c8b6789251e5a1b364a
+EOB 4
+  45.173597129s Elapsed Time,         225,634 Total Entries,          60,068 Entries in block,           5,014 tps in run 
+MD: 789591cc8b1ff6c875e83512f18860443fc4d3933250fffa82bdeae401e0d222
+EOB 5
+  57.259997246s Elapsed Time,         288,841 Total Entries,          63,207 Entries in block,           5,067 tps in run 
+MD: 17059d59d5c5fc9b585c8552d8330b0da8bbc7383797d9c0b62f44af6db2a65c
+EOB 6
+ 1m8.829362939s Elapsed Time,         348,746 Total Entries,          59,905 Entries in block,           5,054 tps in run 
+MD: 06fcf35d54c8e68967cc6c75f62149b7b0a9d70725d890a5988bbc16dd9b11d1
+EOB 7
+1m20.710513378s Elapsed Time,         400,000 Total Entries,          51,254 Entries in block,           4,938 tps in run 
+
+====================
+Recorded 400,000 Entries in 7 Blocks
+Test complete.
