@@ -94,16 +94,29 @@ func (a *Accumulator) Run() {
 				if chain == nil {                // If we don't have a chain for it, then we add one to our tmp state
 					chain = NewChainAcc(*a.DB, entry, a.height) // Create our collector for this chain
 					a.chains[entry.ChainID] = chain             // Add it to our tmp state
+					chain.MD.AddToChain(entry.EntryHash)        // Add this entry to our chain state
+				} else {
+					// This is where we make sure every Entry added to a chain is a non-duplicate to all
+					// entries.  This assumes that the chains for an accumulator are unique to that accumulator,
+					// which is true by design.  So if the entry isn't in the chain right now, and not in the db,
+					// then it is unique.
+					if chain.entries[entry.EntryHash] == 0 { // Added this entry to this chain already?
+						if a.DB.Get(types.EntryNode, entry.EntryHash.Bytes()) == nil { // Have the entry in the DB already?
+							chain.entries[entry.EntryHash] = 1   // No? Then mark it in the chain
+							chain.MD.AddToChain(entry.EntryHash) // Add it to the chain
+						}
+					}
 				}
-				chain.MD.AddToChain(entry.EntryHash) // Add this entry to our chain state
 			default:
 				time.Sleep(100 * time.Millisecond) // If there is nothing to do, pause a bit
 			}
 		}
 
-		for goWrites.Load() > 0 {
+		if goWrites.Load() > 0 {
 			fmt.Println("Waiting on", goWrites.Load(), "database updates.")
-			time.Sleep(1 * time.Second)
+			for goWrites.Load() > 0 {
+				time.Sleep(1 * time.Second)
+			}
 		}
 
 		var chainEntries []node.NEList

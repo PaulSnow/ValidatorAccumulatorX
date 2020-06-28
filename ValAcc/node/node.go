@@ -54,7 +54,7 @@ func (n Node) Put(db *database.DB) error {
 	} else if headHash == nil { // If we have no previous hash and our sequence number is zero, this is our first!
 		db.Put(types.NodeFirst, n.ChainID[:], nHash)
 	} else { // Otherwise if I have a previous hash, then create an index from it to this node
-		db.Put(types.NodeNext, headHash, nHash)
+		//db.Put(types.NodeNext, headHash, nHash)
 	}
 	db.Put(types.NodeHead, n.ChainID.Bytes(), nHash)
 

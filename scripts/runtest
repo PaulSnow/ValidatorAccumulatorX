@@ -3,8 +3,8 @@ go install
 rm valacc.txt
 rm -r ~/.ValAcc/badger000
 
-entryLimit=400000
-tpsLimit=5500
+entryLimit=10000000
+tpsLimit=5500000
 
 rm -r ~/.ValAcc/badger000
 ValAcc $entryLimit 1 $tpsLimit >> valacc.txt

@@ -38,9 +38,18 @@ func (d *DB) Init(instance int) {
 	// Make sure all directories exist
 	os.MkdirAll(d.DBHome, 0777)
 	// Open Badger
+	// Try at least three databases before we give up
 	db, err := badger.Open(badger.DefaultOptions(d.DBHome))
 	if err != nil { // Panic if we can't open Badger
-		panic(err)
+		d.DBHome = fmt.Sprintf("%s%s%03d", types.GetHomeDir(), "/.ValAcc/badger", instance+1)
+		db, err = badger.Open(badger.DefaultOptions(d.DBHome))
+		if err != nil {
+			d.DBHome = fmt.Sprintf("%s%s%03d", types.GetHomeDir(), "/.ValAcc/badger", instance+2)
+			db, err = badger.Open(badger.DefaultOptions(d.DBHome))
+			if err != nil {
+				panic(err)
+			}
+		}
 	}
 	d.badgerDB = db // And all is good.
 }
