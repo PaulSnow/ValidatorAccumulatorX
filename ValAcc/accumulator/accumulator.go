@@ -8,8 +8,6 @@ import (
 
 	"github.com/FactomProject/factomd/util/atomic"
 
-	"github.com/dustin/go-humanize"
-
 	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/database"
 
 	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/merkleDag"
@@ -25,14 +23,16 @@ import (
 // Of course, the Accumulator does secure and order the data, so it is reasonable that a validator may optimistically
 // record entries that might be invalidated by applications after recording.
 type Accumulator struct {
-	DB        *database.DB             // Database to hold and index the data collected by the Accumulator
-	chainID   *types.Hash              // Digital ID of the Accumulator.
-	height    types.BlockHeight        // Height of the current block
-	chains    map[types.Hash]*ChainAcc // Chains with new entries in this block
-	entryFeed chan node.EntryHash      // Stream of entries to be placed into chains
-	control   chan bool                // We are sent a "true" when it is time to end the block
-	mdFeed    chan *types.Hash         // Give back the MD Hashes as they are produced
-	previous  *node.Node               // Previous Directory Block
+	DB            *database.DB             // Database to hold and index the data collected by the Accumulator
+	chainID       *types.Hash              // Digital ID of the Accumulator.
+	height        types.BlockHeight        // Height of the current block
+	chains        map[types.Hash]*ChainAcc // Chains with new entries in this block
+	entryFeed     chan node.EntryHash      // Stream of entries to be placed into chains
+	control       chan bool                // We are sent a "true" when it is time to end the block
+	mdFeed        chan *types.Hash         // Give back the MD Hashes as they are produced
+	previous      *node.Node               // Previous Directory Block
+	EntryCnt      atomic.AtomicInt64       // Count of entries written
+	ChainsInBlock atomic.AtomicInt64       // Count of chains written to
 }
 
 // Allocate the HashMap and Channels for this accumulator
@@ -70,9 +70,13 @@ func (a *Accumulator) Init(db *database.DB, chainID *types.Hash) (
 	return a.entryFeed, a.control, a.mdFeed
 }
 
+func (a *Accumulator) GetEntryFeed() chan node.EntryHash {
+	return a.entryFeed
+}
+
 func (a *Accumulator) Run() {
-	var total int
-	start := time.Now()
+	var totalEntries int64  // We count the entries and chains as we go, but update the atomic counts
+	var ChainsInBlock int64 //  at the end of each block
 
 	var goWrites atomic.AtomicInt
 
@@ -91,7 +95,9 @@ func (a *Accumulator) Run() {
 				}
 			case entry := <-a.entryFeed: // Get the next ANode
 				chain := a.chains[entry.ChainID] // See if we have a chain for it
-				if chain == nil {                // If we don't have a chain for it, then we add one to our tmp state
+				totalEntries++
+				if chain == nil { // If we don't have a chain for it, then we add one to our tmp state
+					ChainsInBlock++
 					chain = NewChainAcc(*a.DB, entry, a.height) // Create our collector for this chain
 					a.chains[entry.ChainID] = chain             // Add it to our tmp state
 					chain.MD.AddToChain(entry.EntryHash)        // Add this entry to our chain state
@@ -148,13 +154,10 @@ func (a *Accumulator) Run() {
 		for _, v := range a.chains {
 			sum += len(v.MD.HashList)
 		}
-		total += sum
-		secs := time.Now().Unix() - start.Unix()
-		fmt.Printf("%15s Elapsed Time, %15s Total Entries, %15s Entries in block, %15s tps in run \n",
-			time.Now().Sub(start).String(),
-			humanize.Comma(int64(total)),
-			humanize.Comma(int64(sum)),
-			humanize.Comma(int64(total)/secs))
+
+		a.EntryCnt.Store(totalEntries)
+		a.ChainsInBlock.Store(ChainsInBlock)
+		ChainsInBlock = 0
 
 		// Calculate the ListMDRoot for all the accumulated MDRoots for all the chains
 		MDAcc := new(merkleDag.MD)

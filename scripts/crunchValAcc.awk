@@ -6,14 +6,27 @@
    tps = $11
 }
 
-/Running/ {
+/Entry limit/ {
    gsub(",","",$0)
-   chains = $12
-   entries = $8
-   tps =16
+   entrylimit = $4
+}
+
+/Chain limit/ {
+   gsub(",","",$0)
+   chainlimit = $4
+}
+
+/TPS limit/ {
+   gsub(",","",$0)
+   tpslimit = $4
+}
+
+/Total Entries/ {
+   gsub(",","",$0)
+   tps = $9
 }
 
 /Recorded/ {
    gsub(",","",$0)
-  print "Entries,", entries, " ,chains, ",chains, ", tps Limit, ", tps, ",time, ","00:" t[1] ":" t[2], " ,tps, " tps
+  print "Entries,", entrylimit, " ,chains, ",chainlimit, ", tps Limit, ", tpslimit, ",tps, ", tps
 }

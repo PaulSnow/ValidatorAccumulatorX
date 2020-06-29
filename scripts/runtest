@@ -1,44 +1,33 @@
 go install
 
 rm valacc.txt
-rm -r ~/.ValAcc/badger000
 
-entryLimit=10000000
+entryLimit=30000000
 tpsLimit=5500000
 
-rm -r ~/.ValAcc/badger000
-ValAcc $entryLimit 1 $tpsLimit >> valacc.txt
 
-rm -r ~/.ValAcc/badger000
+
+rm -r ~/.ValAcc/badger*
 ValAcc $entryLimit 10000 $tpsLimit >> valacc.txt
 
-rm -r ~/.ValAcc/badger000
+rm -r ~/.ValAcc/badger*
 ValAcc $entryLimit 100000 $tpsLimit >> valacc.txt
 
-rm -r ~/.ValAcc/badger000
-ValAcc $entryLimit 200000 $tpsLimit >> valacc.txt
 
-rm -r ~/.ValAcc/badger000
-ValAcc $entryLimit 300000 $tpsLimit >> valacc.txt
-
-rm -r ~/.ValAcc/badger000
-ValAcc $entryLimit 400000 $tpsLimit >> valacc.txt
-
-rm -r ~/.ValAcc/badger000
+rm -r ~/.ValAcc/badger*
 ValAcc $entryLimit 500000 $tpsLimit >> valacc.txt
 
-rm -r ~/.ValAcc/badger000
+
+rm -r ~/.ValAcc/badger*
 ValAcc $entryLimit 1000000 $tpsLimit >> valacc.txt
 
-rm -r ~/.ValAcc/badger000
+
+
+rm -r ~/.ValAcc/badger*
+ValAcc $entryLimit 1500000 $tpsLimit >> valacc.txt
+
+
+
+rm -r ~/.ValAcc/badger*
 ValAcc $entryLimit 2000000 $tpsLimit >> valacc.txt
-
-rm -r ~/.ValAcc/badger000
-ValAcc $entryLimit 3000000 $tpsLimit >> valacc.txt
-
-rm -r ~/.ValAcc/badger000
-ValAcc $entryLimit 4000000 $tpsLimit >> valacc.txt
-
-rm -r ~/.ValAcc/badger000
-ValAcc $entryLimit 5000000 $tpsLimit >> valacc.txt
 
