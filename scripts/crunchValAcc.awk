@@ -26,7 +26,13 @@
    tps = $9
 }
 
+/of Accumulators/ {
+   gsub(",","",$0)
+   accs = $9
+}
+ 
+
 /Recorded/ {
    gsub(",","",$0)
-  print "Entries,", entrylimit, " ,chains, ",chainlimit, ", tps Limit, ", tpslimit, ",tps, ", tps
+  print "Entries,", entrylimit, " ,chains, ",chainlimit, ", tps Limit, ", tpslimit, ",tps, ", tps, ",accs,", accs
 }

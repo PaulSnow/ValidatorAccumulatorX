@@ -2,10 +2,9 @@ package main
 
 import (
 	"crypto/sha256"
+	"flag"
 	"fmt"
 	"math/rand"
-	"os"
-	"strconv"
 	"time"
 
 	router2 "github.com/PaulSnow/ValidatorAccumulator/ValAcc/router"
@@ -25,40 +24,36 @@ func main() {
 
 	var chains []types.Hash
 
-	// Default limits
-	EntryLimit := 50000000 // EntryLimit where we stop. 50 million is enough to run, not too long a run
-	TpsLimit := 1000000000 // A billion is pretty much unlimited, by default.
-	ChainLimit := 1000     // How many chains do we spread the entries over.
-	if len(os.Args) > 1 {
-		var err error
-		EntryLimit, err = strconv.Atoi(os.Args[1])
-		if err != nil {
-			println(help)
-			return
-		}
-		if len(os.Args) > 2 {
-			ChainLimit, err = strconv.Atoi(os.Args[2])
-			if err != nil {
-				println(help)
-				return
-			}
-			if len(os.Args) > 3 {
-				TpsLimit, err = strconv.Atoi(os.Args[3])
-				if err != nil {
-					println(help)
-					return
-				}
-			}
-		}
+	EntryLimitPtr := flag.Int64("e", 1000000, "the number of entries to be processed in this test")
+	ChainLimitPtr := flag.Int64("c", 1000, "The number of chains updated while processing this test")
+	TpsLimitPtr := flag.Int64("t", 5000, "the tps limit of data generated to run this test. if t < 0, no limit")
+	AccNumberPtr := flag.Int64("a", 1, "the number of accumulator instances used in this test")
+	flag.Parse()
+	EntryLimit := *EntryLimitPtr
+	ChainLimit := *ChainLimitPtr
+	TpsLimit := *TpsLimitPtr
+	AccNumber := *AccNumberPtr
+
+	tpsstr := humanize.Comma(TpsLimit)
+	if TpsLimit < 0 {
+		tpsstr = "none"
 	}
-	fmt.Println()
+
 	fmt.Println("=========================")
-	fmt.Printf("Entry limit of   %s\n"+
-		"Chain limit of   %s\n"+
-		"TPS limit of     %s\n",
+	fmt.Println(" -e <number of entries>")
+	fmt.Println(" -c <number of chains>")
+	fmt.Println(" -t <tps limit ( -1 is none)>")
+	fmt.Println(" -a <number of accumulators>")
+	fmt.Println("=========================")
+	fmt.Printf(
+		"Entry limit of     %15s\n"+
+			"Chain limit of     %15s\n"+
+			"TPS limit of       %15s\n"+
+			"# of Accumulators  %15d\n",
 		humanize.Comma(int64(EntryLimit)),
 		humanize.Comma(int64(ChainLimit)),
-		humanize.Comma(int64(TpsLimit)))
+		tpsstr,
+		AccNumber)
 	fmt.Println("=========================")
 	fmt.Println()
 
@@ -73,13 +68,13 @@ func main() {
 	blockCount := 0
 	time.Sleep(time.Second * 2)
 
-	for i := 0; i < EntryLimit; i++ {
-		chain := rand.Int() % ChainLimit
-		if chain >= len(chains) {
+	for i := 0; i < int(EntryLimit); i++ {
+		chain := rand.Int63() % ChainLimit
+		if int(chain) >= len(chains) {
 			var h types.Hash
 			h.Extract(seedHash[:])
 			seedHash = sha256.Sum256(seedHash[:])
-			chain = len(chains)
+			chain = int64(len(chains))
 			chains = append(chains, h)
 		}
 		var eh node.EntryHash
@@ -87,7 +82,9 @@ func main() {
 		eh.EntryHash.Extract(seedHash[:])
 		seedHash = sha256.Sum256(seedHash[:])
 		EntryFeed <- eh
-		time.Sleep(time.Duration((int64(time.Second) * 4 / 7) / int64(TpsLimit)))
+		if TpsLimit > 0 {
+			time.Sleep(time.Duration((int64(time.Second) * 4 / 7) / int64(TpsLimit)))
+		}
 
 	}
 	// Wait for the accumulator to eat up the Entries
