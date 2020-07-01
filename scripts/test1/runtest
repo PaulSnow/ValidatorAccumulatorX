@@ -1,0 +1,41 @@
+go install
+
+rm valacc.txt
+rm -r ~/.ValAcc/badger000
+
+
+rm -r ~/.ValAcc/badger000
+ValAcc 100000000 1 >> valacc.txt
+
+
+rm -r ~/.ValAcc/badger000
+ValAcc 100000000 10 >> valacc.txt
+
+
+rm -r ~/.ValAcc/badger000
+ValAcc 100000000 100 >> valacc.txt
+
+
+rm -r ~/.ValAcc/badger000
+ValAcc 100000000 1000 >> valacc.txt
+
+
+rm -r ~/.ValAcc/badger000
+ValAcc 100000000 5000 >> valacc.txt
+
+rm -r ~/.ValAcc/badger000
+ValAcc 100000000 7500 >> valacc.txt
+
+rm -r ~/.ValAcc/badger000
+ValAcc 100000000 10000 >> valacc.txt
+
+rm -r ~/.ValAcc/badger000
+ValAcc 100000000 13000 >> valacc.txt
+
+rm -r ~/.ValAcc/badger000
+ValAcc 100000000 15000 >> valacc.txt
+
+rm -r ~/.ValAcc/badger000
+ValAcc 100000000 20000 >> valacc.txt
+
+

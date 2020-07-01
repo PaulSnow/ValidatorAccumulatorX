@@ -95,7 +95,7 @@ func TestNodeDB(t *testing.T) {
 	db := GetTestDB(t)
 	node := GetTestNode(t)                              // Get a node, but we are going to override a bunch of fields.
 	node.SubChainIDs = node.SubChainIDs[:0]             // Clear out the subChainIDs, so this is a Directory Block
-	node.ChainID = sha256.Sum256([]byte("TestAcc DID")) // Set the Chain ID to a plausible DID
+	node.ChainID = sha256.Sum256([]byte("TestAcc DID")) // Set the ChainsInBlock ID to a plausible DID
 	node.SequenceNum = 0                                // Gotta be zero for a Directory Block
 	node.Put(db)
 

@@ -12,13 +12,14 @@ import (
 // ChainAcc
 // Tracks the construction of the Merkle DAG and collects the Hash sequence to build the MD
 type ChainAcc struct {
-	Node node.Node
-	MD   *merkleDag.MD // The class for creating the MD and MD Roots
+	entries map[types.Hash]int // list of entry hashes we are collecting
+	Node    node.Node          // The node we are building
+	MD      *merkleDag.MD      // The class for creating the MD and MD Roots
 }
 
 func NewChainAcc(DB database.DB, eHash node.EntryHash, bHeight types.BlockHeight) *ChainAcc {
 	chainAcc := new(ChainAcc)
-
+	chainAcc.entries = make(map[types.Hash]int)
 	previousHash := DB.Get(types.NodeHead, eHash.ChainID[:])
 	if previousHash != nil {
 		previousBytes := DB.Get(types.Node, previousHash[:])

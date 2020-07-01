@@ -38,6 +38,7 @@ func (d *DB) Init(instance int) {
 	// Make sure all directories exist
 	os.MkdirAll(d.DBHome, 0777)
 	// Open Badger
+	// Try at least three databases before we give up
 	db, err := badger.Open(badger.DefaultOptions(d.DBHome))
 	if err != nil { // Panic if we can't open Badger
 		panic(err)

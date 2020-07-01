@@ -6,6 +6,8 @@ import (
 	"sort"
 	"time"
 
+	"github.com/FactomProject/factomd/util/atomic"
+
 	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/database"
 
 	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/merkleDag"
@@ -21,14 +23,16 @@ import (
 // Of course, the Accumulator does secure and order the data, so it is reasonable that a validator may optimistically
 // record entries that might be invalidated by applications after recording.
 type Accumulator struct {
-	DB        *database.DB             // Database to hold and index the data collected by the Accumulator
-	chainID   *types.Hash              // Digital ID of the Accumulator.
-	height    types.BlockHeight        // Height of the current block
-	chains    map[types.Hash]*ChainAcc // Chains with new entries in this block
-	entryFeed chan node.EntryHash      // Stream of entries to be placed into chains
-	control   chan bool                // We are sent a "true" when it is time to end the block
-	mdFeed    chan *types.Hash         // Give back the MD Hashes as they are produced
-	previous  *node.Node               // Previous Directory Block
+	DB            *database.DB             // Database to hold and index the data collected by the Accumulator
+	chainID       *types.Hash              // Digital ID of the Accumulator.
+	height        types.BlockHeight        // Height of the current block
+	chains        map[types.Hash]*ChainAcc // Chains with new entries in this block
+	entryFeed     chan node.EntryHash      // Stream of entries to be placed into chains
+	control       chan bool                // We are sent a "true" when it is time to end the block
+	mdFeed        chan *types.Hash         // Give back the MD Hashes as they are produced
+	previous      *node.Node               // Previous Directory Block
+	EntryCnt      atomic.AtomicInt64       // Count of entries written
+	ChainsInBlock atomic.AtomicInt64       // Count of chains written to
 }
 
 // Allocate the HashMap and Channels for this accumulator
@@ -66,9 +70,15 @@ func (a *Accumulator) Init(db *database.DB, chainID *types.Hash) (
 	return a.entryFeed, a.control, a.mdFeed
 }
 
+func (a *Accumulator) GetEntryFeed() chan node.EntryHash {
+	return a.entryFeed
+}
+
 func (a *Accumulator) Run() {
-	var total int
-	start := time.Now()
+	var totalEntries int64  // We count the entries and chains as we go, but update the atomic counts
+	var ChainsInBlock int64 //  at the end of each block
+
+	var goWrites atomic.AtomicInt
 
 	for {
 		// While we are processing a block
@@ -80,35 +90,59 @@ func (a *Accumulator) Run() {
 			select {
 			case ctl := <-a.control: // Have we been asked to end the block?
 				if ctl {
+					println("Processing EOB")
 					break block // Break block processing
 				}
 			case entry := <-a.entryFeed: // Get the next ANode
 				chain := a.chains[entry.ChainID] // See if we have a chain for it
-				if chain == nil {                // If we don't have a chain for it, then we add one to our tmp state
+				totalEntries++
+				if chain == nil { // If we don't have a chain for it, then we add one to our tmp state
+					ChainsInBlock++
 					chain = NewChainAcc(*a.DB, entry, a.height) // Create our collector for this chain
 					a.chains[entry.ChainID] = chain             // Add it to our tmp state
+					chain.MD.AddToChain(entry.EntryHash)        // Add this entry to our chain state
+				} else {
+					// This is where we make sure every Entry added to a chain is a non-duplicate to all
+					// entries.  This assumes that the chains for an accumulator are unique to that accumulator,
+					// which is true by design.  So if the entry isn't in the chain right now, and not in the db,
+					// then it is unique.
+					if chain.entries[entry.EntryHash] == 0 { // Added this entry to this chain already?
+						if a.DB.Get(types.EntryNode, entry.EntryHash.Bytes()) == nil { // Have the entry in the DB already?
+							chain.entries[entry.EntryHash] = 1   // No? Then mark it in the chain
+							chain.MD.AddToChain(entry.EntryHash) // Add it to the chain
+						}
+					}
 				}
-				chain.MD.AddToChain(entry.EntryHash) // Add this entry to our chain state
 			default:
 				time.Sleep(100 * time.Millisecond) // If there is nothing to do, pause a bit
 			}
 		}
 
+		if goWrites.Load() > 0 {
+			fmt.Println("Waiting on", goWrites.Load(), "database updates.")
+			for goWrites.Load() > 0 {
+				time.Sleep(1 * time.Second)
+			}
+		}
+
 		var chainEntries []node.NEList
 		for _, v := range a.chains {
-			// Okay, we are ready to update the ListMDRoot
-			// ToDo:  This isn't entirely correct.  It works for Directory Blocks of Entry Blocks,
-			// ToDo:  but not for Directory Blocks with sub nodes of Entry Blocks.
-			if !v.Node.IsNode {
-				v.Node.ListMDRoot = *v.MD.GetMDRoot()
-				v.Node.EntryList = v.MD.HashList
-				v.Node.Put(a.DB)
-			} else {
-				ne := new(node.NEList)
-				ne.ChainID = v.Node.ChainID
-				ne.MDRoot = v.Node.ListMDRoot
-				chainEntries = append(chainEntries, *ne)
-			}
+			v.Node.ListMDRoot = *v.MD.GetMDRoot()
+			v.Node.EntryList = v.MD.HashList
+			v.Node.IsNode = false
+
+			tNode := v.Node
+			go func() {
+				goWrites.Add(1)
+				tNode.Put(a.DB)
+				goWrites.Add(-1)
+			}()
+
+			ne := new(node.NEList)
+			ne.ChainID = v.Node.ChainID
+			ne.MDRoot = v.Node.ListMDRoot
+			chainEntries = append(chainEntries, *ne)
+
 		}
 
 		sort.Slice(chainEntries, func(i, j int) bool {
@@ -116,14 +150,14 @@ func (a *Accumulator) Run() {
 		})
 
 		// Print some statistics
-		println("\n===========================\n")
 		var sum int
 		for _, v := range a.chains {
 			sum += len(v.MD.HashList)
 		}
-		total += sum
-		secs := time.Now().Unix() - start.Unix()
-		fmt.Printf("%15d Entries in block, %15d tps in run \n", sum, int64(total)/secs)
+
+		a.EntryCnt.Store(totalEntries)
+		a.ChainsInBlock.Store(ChainsInBlock)
+		ChainsInBlock = 0
 
 		// Calculate the ListMDRoot for all the accumulated MDRoots for all the chains
 		MDAcc := new(merkleDag.MD)

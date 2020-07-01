@@ -165,7 +165,6 @@ func (e *ANode) Unmarshal(data []byte) (dataConsumed int, err error) {
 // EntryHash
 // The accumulator assumes the ANode has already been written to the (a) database.  It is only dealing with EntryHashes
 type EntryHash struct {
-	NewChain  bool         // Create a chain.  If the chain already exists, entry is ignored
 	SubChains []types.Hash // SubChainIDs used to create the ChainID
 	ChainID   types.Hash   // The ChainID
 	EntryHash types.Hash   // The EntryHash

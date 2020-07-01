@@ -35,7 +35,7 @@ type Node struct {
 // NEList
 // Node List (NEList) is a struct of a ChainID and a Node Hash
 type NEList struct {
-	ChainID types.Hash // Chain or SubChain ID that leads to a node, or a ChainID that leads to an ANode
+	ChainID types.Hash // ChainsInBlock or SubChain ID that leads to a node, or a ChainID that leads to an ANode
 	MDRoot  types.Hash // Merkle Dag of either sub nodes or entries
 }
 
@@ -62,10 +62,6 @@ func (n Node) Put(db *database.DB) error {
 	// the DID for the root accumulator, and this is a Directory Block.  So we will index it
 	// against the block height.  Other nodes are not indexed by block height.
 	if len(n.SubChainIDs) == 0 {
-		marshal := n.Marshal()
-		if marshal == nil {
-			return errors.New("failed to marshal node")
-		}
 		db.PutInt32(types.DirectoryBlockHeight, int(n.BHeight), nHash)
 	}
 
@@ -162,7 +158,7 @@ func (n Node) Marshal() (bytes []byte) {
 	bytes = append(bytes, n.ListMDRoot.Bytes()...)
 	bytes = append(bytes, types.Uint32Bytes(uint32(len(n.List)))...) // Put the number of List Entries
 	for _, list := range n.List {                                    // For each SubChain
-		bytes = append(bytes, list.ChainID.Bytes()...) // Chain/SubChain ID
+		bytes = append(bytes, list.ChainID.Bytes()...) // ChainsInBlock/SubChain ID
 		bytes = append(bytes, list.MDRoot.Bytes()...)  // MD of the sub node or entry
 	}
 	bytes = append(bytes, types.Uint32Bytes(uint32(len(n.EntryList)))...) // Put the number of List Entries
