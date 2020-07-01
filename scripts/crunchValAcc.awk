@@ -28,7 +28,7 @@
 
 /of Accumulators/ {
    gsub(",","",$0)
-   accs = $9
+   accs = $4
 }
  
 

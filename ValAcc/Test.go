@@ -59,7 +59,7 @@ func main() {
 
 	router := new(router2.Router)
 	EntryFeed := make(chan node.EntryHash, 10000)
-	router.Init(EntryFeed, 4)
+	router.Init(EntryFeed, int(AccNumber))
 	go router.Run()
 
 	// Validator implementation
