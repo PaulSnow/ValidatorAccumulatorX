@@ -26,7 +26,7 @@ func main() {
 
 	EntryLimitPtr := flag.Int64("e", 1000000, "the number of entries to be processed in this test")
 	ChainLimitPtr := flag.Int64("c", 1000, "The number of chains updated while processing this test")
-	TpsLimitPtr := flag.Int64("t", 5000, "the tps limit of data generated to run this test. if t < 0, no limit")
+	TpsLimitPtr := flag.Int64("t", -1, "the tps limit of data generated to run this test. if t < 0, no limit")
 	AccNumberPtr := flag.Int64("a", 1, "the number of accumulator instances used in this test")
 	flag.Parse()
 	EntryLimit := *EntryLimitPtr
@@ -59,7 +59,7 @@ func main() {
 
 	router := new(router2.Router)
 	EntryFeed := make(chan node.EntryHash, 10000)
-	router.Init(EntryFeed, 4)
+	router.Init(EntryFeed, int(AccNumber))
 	go router.Run()
 
 	// Validator implementation
