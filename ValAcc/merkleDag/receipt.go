@@ -1,18 +1,20 @@
 package merkleDag
 
 import (
+	"fmt"
+
 	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
 )
 
 type ReceiptNode struct {
-	Right bool
-	Hash  types.Hash // Left Hash of a Merkle Directed Acyclic Graph (MD)
+	Right bool       // The given Hash will be on the Right (right==true) or on the left (right==false)
+	Hash  types.Hash // hash to be combined at the next level
 }
 
 type MDReceipt struct {
-	EntryHash types.Hash    // Entry Hash of the data subject to the MDReceipt
-	Nodes     []ReceiptNode // Path through the data collected by the MerkleDag
-	MDRoot    types.Hash    // Merkle DAG root from the Accumulator network.
+	EntryHash types.Hash     // Entry Hash of the data subject to the MDReceipt
+	Nodes     []*ReceiptNode // Path through the data collected by the MerkleDag
+	MDRoot    types.Hash     // Merkle DAG root from the Accumulator network.
 	// We likely want a struct here provided by the underlying blockchain where we are recording
 	// the MDRoots for the Accumulator
 }
@@ -30,73 +32,112 @@ func (mdr *MDReceipt) BuildMDReceipt(MerkleDag MD, data types.Hash) {
 	right := true             // We assume we will be combining from the right
 	idx := -1                 // idx of -1 means not yet found the hash for which we want a receipt in the hash stream
 
-DataLoop: // Loop through the data behind the Merkle DAG
+DataLoop: // Loop through the data behind the Merkle DAG and rebuild the MD state
 	for _, h := range MerkleDag.HashList {
+		right = true // Generally our "place" is in md[], so the hash we combine with will be on the right
 		// Always make sure md ends with a nil; limits corner cases
 		if md[len(md)-1] != nil { // Make sure md still ends in a nil
 			md = append(md, nil)
 		}
 		// Look for the data that we are computing a receipt for
+		// If the data is duplicated, we only pay attention to the first instance, but every
+		// hash should be unique.  We could take an index of an entry to allow proof of any
+		// of a set of duplicate hashes, but we don't do that here.
 		if idx < 0 && h == data {
 			idx = 0
+			right = false // Here we found our hash, so we will be (maybe) combining with a hash on the left
 		}
 		// Then add this data to the Merkle DAG we are creating
 		for i, v := range md {
-			if v == nil {
-				if i == idx { // If we move from right to left, set right to false
-					right = false
-				}
+			if v == nil { // If v is nil, then we move h to md[i].
 				md[i] = h.Copy()
-				continue DataLoop
+				if i == idx { // If this is our hash, then we will combine
+					right = true // with a hash on the right.
+				}
+				continue DataLoop // When we move a hash to md[], then we are done and need to get another h
 			}
 			if i == idx { // If we are on the path, and we are going to combine, then record
 				rn := new(ReceiptNode)
-				mdr.Nodes = append(mdr.Nodes, *rn)
+				mdr.Nodes = append(mdr.Nodes, rn)
 				rn.Right = right
 				if right { // If our hash is on the right, we need to record the hash on the left
-					rn.Hash = *v.Copy()
+					rn.Hash = *h.Copy()
 				} else { // If our hash is on the left, we need to record the hash on the right
-					rn.Hash = h
+					rn.Hash = *v.Copy()
 				}
-				right = true // Regardless, "our" hash is left on the right
-				idx++        // And our hash progresses down the table
+				right = false // Regardless, our hash is now in h and will later combine with a hash on the left
+				idx++         // And our hash will "carry" to the next slot in md[]
 			}
 			h = *v.Combine(h) // Combine v (left) and hash (right) to get a new combined hash to use forward
 			md[i] = nil       // Now that we have combined v and hash, this spot is now empty, so clear it.
 		}
 	}
-
+	// At this point we have a (possibly) partial merkle tree.
+	//            1   2   3   4   5   6
+	//             \ /     \ /     \ /
+	//              12     34       56
+	//                \   /
+	//                  1234
+	//
+	//  So what we want to do is hash 1234 with 56  to create the Merkle DAG root
+	//            1   2   3   4   5   6
+	//             \ /     \ /     \ /
+	//             1+2     3+4     5+6
+	//                \   /       /
+	//                12+34      /
+	//                     \    /
+	//                    1234+56
+	//
+	//  What is interesting is that the []md state looks like before we create the Merkle DAG root is:
+	//     __
+	//     5+6
+	//     12+34
+	//     __
+	// So the last two nodes in the receipt will either be
+	//      left 1234
+	// if the proof is either for 5 or 6, or
+	//      right 56
+	// if the proof is for 1, 2, 3, or 4
+	//
 	if idx == -1 {
 		mdr.Nodes = mdr.Nodes[:0]
 		return
 	}
-	var mdroot *types.Hash
-	right = false
+	var mdRoot *types.Hash // mdRoot is the merkle DAG root we are building.
+	right = true
 
 	// We close the Merkle DAG
 	for i, v := range md {
-		if i == idx && mdroot == nil {
-			right = true
-		}
-		if mdroot == nil { // We will pick up the first hash in m.MD no matter what.
-			mdroot = v // If we assign a nil over a nil, no harm no foul.  Fewer cases to test this way.
-		} else if v != nil { // If MDRoot isn't nil and v isn't nil, we combine them.
-
-			if i >= idx {
-				rn := new(ReceiptNode)
-				mdr.Nodes = append(mdr.Nodes, *rn)
-				rn.Right = right
-				if right {
-					rn.Hash = *v.Copy()
-					rn.Right = false
-				} else {
-					rn.Hash = *mdroot.Copy()
-					right = false
+		if mdRoot == nil { // If we have not found a hash yet, try and pick one up here.
+			if i == idx {
+				if v == nil { // This should never happen.
+					panic("found our hash level, but no hash was found.")
 				}
+				right = false // Now our hash is on the right, will be combined with a hash on the left, or none at all.
 				idx++
 			}
-			mdroot = v.Combine(*mdroot) // v is on the left, MDRoot candidate is on the right, for a new MDRoot
-			mdr.MDRoot = *mdroot.Copy() // The last one is the one we want
+			if v != nil {
+				mdRoot = new(types.Hash)
+				copy(mdRoot[:], v[:]) // Pick up this hash, and look for the next
+			}
+			continue
+		}
+		if v != nil { // If MDRoot isn't nil and v isn't nil, we combine them.
+			if i == idx {
+				rn := new(ReceiptNode)
+				mdr.Nodes = append(mdr.Nodes, rn)
+				rn.Right = right
+				if right {
+					copy(rn.Hash[:], mdRoot[:])
+				} else {
+					copy(rn.Hash[:], v[:])
+				}
+				fmt.Printf(" Right %v %x\n", rn.Right, rn.Hash)
+				right = false
+				idx++
+			}
+			mdRoot = v.Combine(*mdRoot)    // v is on the left, MDRoot candidate is on the right, for a new MDRoot
+			copy(mdr.MDRoot[:], mdRoot[:]) // The last one is the one we want
 		}
 	}
 	return
@@ -104,15 +145,16 @@ DataLoop: // Loop through the data behind the Merkle DAG
 
 // Validate
 // Run down the Merkle DAG and prove that this receipt self validates
-func (mdr MDReceipt) Validate() bool {
-	sum := mdr.EntryHash
+func (mdr *MDReceipt) Validate() bool {
+	hash := mdr.EntryHash
 	for _, n := range mdr.Nodes {
-		hash := n.Hash.Copy()
+		node := n.Hash.Copy()
 		if n.Right {
-			sum = *hash.Combine(sum)
+			hash = *hash.Combine(*node)
 		} else {
-			sum = *sum.Combine(*hash)
+			hash = *node.Combine(hash)
 		}
+		fmt.Printf(" Validate Right %v %x => hash %x \n", n.Right, n.Hash, hash)
 	}
-	return sum == mdr.MDRoot
+	return hash == mdr.MDRoot
 }
