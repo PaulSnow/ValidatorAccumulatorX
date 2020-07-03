@@ -1,8 +1,6 @@
 package merkleDag
 
 import (
-	"fmt"
-
 	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
 )
 
@@ -132,7 +130,6 @@ DataLoop: // Loop through the data behind the Merkle DAG and rebuild the MD stat
 				} else {
 					copy(rn.Hash[:], v[:])
 				}
-				fmt.Printf(" Right %v %x\n", rn.Right, rn.Hash)
 				right = false
 				idx++
 			}
@@ -154,7 +151,6 @@ func (mdr *MDReceipt) Validate() bool {
 		} else {
 			hash = *node.Combine(hash)
 		}
-		fmt.Printf(" Validate Right %v %x => hash %x \n", n.Right, n.Hash, hash)
 	}
 	return hash == mdr.MDRoot
 }
