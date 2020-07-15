@@ -4,8 +4,9 @@ This code base was used to measure just the overhead of creating merkle trees by
 a time.  The goal was originally to spread out the overhead of creating merkle trees over time, so there
 would not be a huge cpu demand at the end of a block.
 
-Turns out the algorithm is very simple and flexible.  But it also needs integration with a database, so 
-I kept this code for now, and continued development on the ValidatorAccumulator module.
+Turns out the algorithm is very simple and flexible.  The current code gives us a rough idea of the
+performance of building the blockchain infrastructure under a stream of ordered, validated hashes from
+some set of sources.
 
 # ValidatorAccumulator
 
