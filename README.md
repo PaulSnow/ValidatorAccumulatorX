@@ -1,14 +1,19 @@
-# Simple
+# ValidatorAccumulator
+
+I built two separate projects, Simple and ValAcc.  Simple was just Merkle Tree work, and ValAcc integrated
+a database (Badger) and did some benchmarking of what kind of transaction rates might be possible under
+this approach.
+
+## Simple
 
 This code base was used to measure just the overhead of creating merkle trees by adding elements one at
 a time.  The goal was originally to spread out the overhead of creating merkle trees over time, so there
 would not be a huge cpu demand at the end of a block.
 
-Turns out the algorithm is very simple and flexible.  The current code gives us a rough idea of the
-performance of building the blockchain infrastructure under a stream of ordered, validated hashes from
-some set of sources.
+Turns out the algorithm is very simple and flexible.  There is no database integration in this code, just exploring 
+what can be done with Merkle Trees
 
-# ValidatorAccumulator
+## ValAcc
 
 The Validator/Accumulator (ValAcc) architecture allows for multiple applications to use the same facility
 to collect and order data.  These applications can happily run along side each other, or interact
