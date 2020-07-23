@@ -21,7 +21,7 @@ const help = "\n\nUsage:     VarAcc [ Entry Limit [ChainsInBlock Limit  [tps Lim
 	"           VarAcc 100000 50000 1000  # Sets the Entry Limit to 100k, ChainsInBlock Limit to 50k and tps limit to 1000k"
 
 func main() {
-
+	types.StartApp = time.Now()
 	var chains []types.Hash
 
 	EntryLimitPtr := flag.Int64("e", 1000000, "the number of entries to be processed in this test")
@@ -67,7 +67,7 @@ func main() {
 	seedHash := sha256.Sum256([]byte(fmt.Sprint("Accumulator", rand.Int())))
 	blockCount := 0
 	time.Sleep(time.Second * 2)
-
+	total := int64(0)
 	for i := 0; i < int(EntryLimit); i++ {
 		chain := rand.Int63() % ChainLimit
 		if int(chain) >= len(chains) {
@@ -82,10 +82,14 @@ func main() {
 		eh.EntryHash.Extract(seedHash[:])
 		seedHash = sha256.Sum256(seedHash[:])
 		EntryFeed <- eh
-		if TpsLimit > 0 {
-			time.Sleep(time.Duration((int64(time.Second) * 4 / 7) / int64(TpsLimit)))
+		total++
+		if i&0xFF == 0 {
+			tps := total / (time.Now().Unix() - types.StartApp.Unix() + 1)
+			for tps > TpsLimit {
+				time.Sleep(time.Second)
+				tps = total / (time.Now().Unix() - types.StartApp.Unix() + 1)
+			}
 		}
-
 	}
 	// Wait for the accumulator to eat up the Entries
 	for len(EntryFeed) == 0 {

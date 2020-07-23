@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	badger "github.com/dgraph-io/badger/v2"
+	"github.com/dgraph-io/badger/v2"
 )
 
 func TestDatabase(t *testing.T) {

@@ -9,22 +9,7 @@ accLimit="-a 4"
 
 
 rm -r ~/.ValAcc/badger*
-ValAcc $entryLimit -c 10000 $tpsLimit -a 9 >> valacc.txt
-
-rm -r ~/.ValAcc/badger*
-ValAcc $entryLimit -c 100000 $tpsLimit -a 9 >> valacc.txt
-
-rm -r ~/.ValAcc/badger*
-ValAcc $entryLimit -c 500000 $tpsLimit -a 9 >> valacc.txt
-
-rm -r ~/.ValAcc/badger*
-ValAcc $entryLimit -c 1000000 $tpsLimit -a 9 >> valacc.txt
-
-rm -r ~/.ValAcc/badger*
-ValAcc $entryLimit -c 1250000 $tpsLimit -a 9 >> valacc.txt
-
-rm -r ~/.ValAcc/badger*
-ValAcc $entryLimit -c 1500000 $tpsLimit -a 9 >> valacc.txt
+ValAcc $entryLimit -c 1000000000 -a 1 -t 1000 >> valacc.txt
 
 
 
