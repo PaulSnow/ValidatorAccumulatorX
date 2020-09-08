@@ -15,7 +15,10 @@ package types
 import (
 	"os"
 	"os/user"
+	"time"
 )
+
+var StartApp time.Time
 
 // ======================= Helper Functions =================================
 
@@ -85,4 +88,17 @@ func Uint32Bytes(i uint32) []byte {
 // Unmarshal a uint32 (big endian)
 func BytesUint32(data []byte) (uint32, []byte) {
 	return uint32(data[0])<<24 + uint32(data[1])<<16 + uint32(data[2])<<8 + uint32(data[3]), data[4:]
+}
+
+// Uint64Bytes
+// Marshal a int64 (big endian)
+func Uint64Bytes(i uint64) []byte {
+	return append([]byte{}, byte(i>>56), byte(i>>48), byte(i>>40), byte(i>>32), byte(i>>24), byte(i>>16), byte(i>>8), byte(i))
+}
+
+// BytesUint64
+// Unmarshal a uint64 (big endian)
+func BytesUint64(data []byte) (uint64, []byte) {
+	return uint64(data[0])<<56 + uint64(data[1])<<48 + uint64(data[2])<<40 + uint64(data[3])<<32 +
+		uint64(data[4])<<24 + uint64(data[5])<<16 + uint64(data[6])<<8 + uint64(data[7]), data[4:]
 }

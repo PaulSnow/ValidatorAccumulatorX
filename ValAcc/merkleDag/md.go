@@ -25,7 +25,7 @@ func (m *MD) GetHashList() (list []byte) {
 // AddToChain
 // Add a Hash to the chain and incrementally build the MD
 func (m *MD) AddToChain(hash types.Hash) {
-
+	hash = *hash.Copy() // Get a copy of the hash
 	// We are going through through the MD list and combining hashes, so we have to record the hash first thing
 	m.HashList = append(m.HashList, hash) // before it is combined with other hashes already added to MD[].
 
@@ -41,8 +41,8 @@ func (m *MD) AddToChain(hash types.Hash) {
 
 		// Look and see if the current spot in MD is open.
 		if v == nil { // If it is open, put our hash here and continue.
-			m.MD[i] = hash.Copy() // put a pointer to a copy of hash into m.MD
-			return                // If we have added the hash to m.MD then we are done.
+			m.MD[i] = &hash // put a pointer to a copy of hash into m.MD
+			return          // If we have added the hash to m.MD then we are done.
 		}
 
 		// If teh current spot is NOT open, we need to combine the hash we have with the hash on the "left", i.e.

@@ -33,6 +33,7 @@ type Accumulator struct {
 	previous      *node.Node               // Previous Directory Block
 	EntryCnt      atomic.AtomicInt64       // Count of entries written
 	ChainsInBlock atomic.AtomicInt64       // Count of chains written to
+	ChainCnt      atomic.AtomicInt64       // Count of all chains
 }
 
 // Allocate the HashMap and Channels for this accumulator
@@ -90,31 +91,35 @@ func (a *Accumulator) Run() {
 			select {
 			case ctl := <-a.control: // Have we been asked to end the block?
 				if ctl {
-					println("Processing EOB")
+					println("Processing EOB ", a.height)
+					a.height++
 					break block // Break block processing
 				}
-			case entry := <-a.entryFeed: // Get the next ANode
-				chain := a.chains[entry.ChainID] // See if we have a chain for it
-				totalEntries++
-				if chain == nil { // If we don't have a chain for it, then we add one to our tmp state
-					ChainsInBlock++
-					chain = NewChainAcc(*a.DB, entry, a.height) // Create our collector for this chain
-					a.chains[entry.ChainID] = chain             // Add it to our tmp state
-					chain.MD.AddToChain(entry.EntryHash)        // Add this entry to our chain state
-				} else {
-					// This is where we make sure every Entry added to a chain is a non-duplicate to all
-					// entries.  This assumes that the chains for an accumulator are unique to that accumulator,
-					// which is true by design.  So if the entry isn't in the chain right now, and not in the db,
-					// then it is unique.
-					if chain.entries[entry.EntryHash] == 0 { // Added this entry to this chain already?
-						if a.DB.Get(types.EntryNode, entry.EntryHash.Bytes()) == nil { // Have the entry in the DB already?
-							chain.entries[entry.EntryHash] = 1   // No? Then mark it in the chain
-							chain.MD.AddToChain(entry.EntryHash) // Add it to the chain
+			default:
+				select {
+				case entry := <-a.entryFeed: // Get the next ANode
+					chain := a.chains[entry.ChainID] // See if we have a chain for it
+					totalEntries++
+					if chain == nil { // If we don't have a chain for it, then we add one to our tmp state
+						ChainsInBlock++
+						chain = NewChainAcc(*a.DB, entry, a.height) // Create our collector for this chain
+						a.chains[entry.ChainID] = chain             // Add it to our tmp state
+						chain.MD.AddToChain(entry.EntryHash)        // Add this entry to our chain state
+					} else {
+						// This is where we make sure every Entry added to a chain is a non-duplicate to all
+						// entries.  This assumes that the chains for an accumulator are unique to that accumulator,
+						// which is true by design.  So if the entry isn't in the chain right now, and not in the db,
+						// then it is unique.
+						if chain.entries[entry.EntryHash] == 0 { // Added this entry to this chain already?
+							if a.DB.Get(types.EntryNode, entry.EntryHash.Bytes()) == nil { // Have the entry in the DB already?
+								chain.entries[entry.EntryHash] = 1   // No? Then mark it in the chain
+								chain.MD.AddToChain(entry.EntryHash) // Add it to the chain
+							}
 						}
 					}
+				default:
+					time.Sleep(100 * time.Millisecond) // If there is nothing to do, pause a bit
 				}
-			default:
-				time.Sleep(100 * time.Millisecond) // If there is nothing to do, pause a bit
 			}
 		}
 
@@ -157,6 +162,7 @@ func (a *Accumulator) Run() {
 
 		a.EntryCnt.Store(totalEntries)
 		a.ChainsInBlock.Store(ChainsInBlock)
+		a.ChainCnt.Add(ChainsInBlock)
 		ChainsInBlock = 0
 
 		// Calculate the ListMDRoot for all the accumulated MDRoots for all the chains
@@ -176,7 +182,10 @@ func (a *Accumulator) Run() {
 		directoryBlock.SequenceNum = types.Sequence(a.height)
 		directoryBlock.TimeStamp = types.TimeStamp(time.Now().UnixNano())
 		directoryBlock.IsNode = true
-		directoryBlock.ListMDRoot = *MDAcc.GetMDRoot()
+		lMDR := MDAcc.GetMDRoot()
+		if lMDR != nil {
+			directoryBlock.ListMDRoot = *lMDR
+		}
 
 		// Write the directory
 		directoryBlock.Put(a.DB)

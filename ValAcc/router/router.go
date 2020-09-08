@@ -27,7 +27,6 @@ type Router struct {
 }
 
 func (r *Router) blockTimer() {
-	start := time.Now()
 	blkCnt := 1
 	for { // Process Blocks
 		time.Sleep(10 * time.Second) // Create a block for some period of time.
@@ -51,16 +50,16 @@ func (r *Router) blockTimer() {
 			fmt.Printf("Merkle DAG Root hash for %d is %x\n", i, *<-mdFeed)
 		}
 		blkCnt++
-		var totalEntries, chainsInBlock int64
+		var totalEntries, totalChains int64
 
 		for _, acc := range r.ACCs {
 			totalEntries += acc.EntryCnt.Load()
-			chainsInBlock += acc.ChainsInBlock.Load()
+			totalChains += acc.ChainCnt.Load()
 		}
-		secs := time.Now().Unix() - start.Unix() + 1
-		fmt.Printf("Total Entries Written %s to %s chains, @ %s tps\n",
+		secs := time.Now().Unix() - types.StartApp.Unix() + 1
+		fmt.Printf("Total Entries Written %s to %s total chains, @ %s tps\n",
 			humanize.Comma(totalEntries),
-			humanize.Comma(chainsInBlock),
+			humanize.Comma(totalChains),
 			humanize.Comma(totalEntries/secs))
 	}
 }

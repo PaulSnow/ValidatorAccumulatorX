@@ -26,13 +26,9 @@ func (h *Hash) Extract(data []byte) []byte {
 // Combine
 // Hash this hash (the left hash) with the given right hash to produce a new hash
 func (h Hash) Combine(right Hash) *Hash {
-	sum := sha256.New()
-	x := sha256.Sum256(h[:]) // Process the left side, i.e. v from this position in c.MD
-	sum.Write(x[:])
-	x = sha256.Sum256(right[:]) // Process the right side, i.e. whatever hash combinations we have in hash
-	sum.Write(x[:])
+	combine := sha256.Sum256(append(h[:], right[:]...)) // Process the left side, i.e. v from this position in c.MD
 	var combinedHash Hash
-	copy(combinedHash[:], sum.Sum(nil))
+	combinedHash.Extract(combine[:])
 	return &combinedHash
 }
 
