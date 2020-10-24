@@ -18,13 +18,14 @@ import (
 	"os"
 
 	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
-
 	"github.com/dgraph-io/badger/v2"
+	dbm "github.com/tendermint/tm-db"
 )
 
 type DB struct {
 	DBHome   string
 	badgerDB *badger.DB
+	db2 dbm.DB
 }
 
 // We take an instance of the database, because we anticipate sometime in the future,
@@ -32,6 +33,9 @@ type DB struct {
 // for the ValAcc project, but it has been useful for factomd testing.
 func (d *DB) Init(instance int) {
 	// Make sure the home directory exists. If it does, then use it, otherwise go find the home directory.
+
+
+	//dbm.dbProvider(&nm.DBContext{"fctaccounts", config})
 	if len(d.DBHome) == 0 {
 		d.DBHome = fmt.Sprintf("%s%s%03d", types.GetHomeDir(), "/.ValAcc/badger", instance)
 	}
