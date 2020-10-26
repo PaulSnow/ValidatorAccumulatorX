@@ -23,7 +23,6 @@ import (
 
 type DB struct {
 	DBHome   string
-	//badgerDB *badger.DB
 	db2 dbm.DB
 }
 
@@ -37,25 +36,6 @@ func (d *DB) InitDB(db dbm.DB) {
 }
 
 func (d *DB) Init(instance int) {
-	// Make sure the home directory exists. If it does, then use it, otherwise go find the home directory.
-
-
-	//dbm.dbProvider(&nm.DBContext{"fctaccounts", config})
-/*
-	if len(d.DBHome) == 0 {
-		d.DBHome = fmt.Sprintf("%s%s%03d", types.GetHomeDir(), "/.ValAcc/badger", instance)
-	}
-	// Make sure all directories exist
-	os.MkdirAll(d.DBHome, 0777)
-	// Open Badger
-	// Try at least three databases before we give up
-	db, err := badger.Open(badger.DefaultOptions(d.DBHome))
-	if err != nil { // Panic if we can't open Badger
-		panic(err)
-	}
-	d.badgerDB = db // And all is good.
-
- */
 }
 
 // GetKey
@@ -70,34 +50,11 @@ func GetKey(bucket string, key []byte) (CKey []byte) {
 // Look in the given bucket, and return the key found.  Returns nil if no value
 // is found for the given key
 func (d *DB) Get(bucket string, key []byte) (value []byte) {
-	//d.db2.Get()
-
-
 	CKey := GetKey(bucket, key) // combine the bucket and the key
 	value, err := d.db2.Get(CKey)
 	if err != nil {
 		return nil
 	}
-	/*
-	// Go look up the CKey, and return any error we might find.
-	err := d.badgerDB.View(func(txn *badger.Txn) error {
-		item, err := txn.Get(CKey)
-		if err != nil {
-			return err
-		}
-		err = item.Value(func(val []byte) error {
-			value = append(value, val...)
-			return nil
-		})
-		return err
-	})
-	// If anything goes wrong, return nil
-	if err != nil {
-		return nil
-	}
-	// If we didn't find the value, we will return a nil here.
-
-	 */
 	return value
 }
 
@@ -111,17 +68,7 @@ func (d *DB) GetInt32(bucket string, ikey uint32) (value []byte) {
 // writing the key/value pair to the database.
 func (d *DB) Put(bucket string, key []byte, value []byte) error {
 	CKey := GetKey(bucket, key)
-
-	err := d.db2.Set(CKey,value)
-	/*
-
-	// Update the key/value in the database
-	err := d.badgerDB.Update(func(txn *badger.Txn) error {
-		err := txn.Set([]byte(CKey), value)
-		return err
-	}) */
-
-	return err
+	return d.db2.Set(CKey,value)
 }
 
 // PutInt
