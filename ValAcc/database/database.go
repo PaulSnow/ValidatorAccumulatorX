@@ -20,7 +20,7 @@ import (
 
 type DB struct {
 	DBHome   string
-	db2 dbm.DB
+	DB2 dbm.DB
 }
 
 
@@ -29,7 +29,7 @@ type DB struct {
 // running multiple instances of the database.  This feature might not ever be used
 // for the ValAcc project, but it has been useful for factomd testing.
 func (d *DB) InitDB(db dbm.DB) {
-    d.db2 = db
+    d.DB2 = db
 }
 
 func (d *DB) Init(instance int) {
@@ -48,7 +48,7 @@ func GetKey(bucket string, key []byte) (CKey []byte) {
 // is found for the given key
 func (d *DB) Get(bucket string, key []byte) (value []byte) {
 	CKey := GetKey(bucket, key) // combine the bucket and the key
-	value, err := d.db2.Get(CKey)
+	value, err := d.DB2.Get(CKey)
 	if err != nil {
 		return nil
 	}
@@ -65,7 +65,7 @@ func (d *DB) GetInt32(bucket string, ikey uint32) (value []byte) {
 // writing the key/value pair to the database.
 func (d *DB) Put(bucket string, key []byte, value []byte) error {
 	CKey := GetKey(bucket, key)
-	return d.db2.Set(CKey,value)
+	return d.DB2.Set(CKey,value)
 }
 
 // PutInt
