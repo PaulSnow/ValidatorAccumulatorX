@@ -15,7 +15,7 @@ package database
 
 import (
 	"fmt"
-	"os"
+	//"os"
 
 	"github.com/AccumulusNetwork/ValidatorAccumulator/ValAcc/types"
 	dbm "github.com/tendermint/tm-db"
@@ -23,9 +23,11 @@ import (
 
 type DB struct {
 	DBHome   string
-	badgerDB *badger.DB
+	//badgerDB *badger.DB
 	db2 *dbm.DB
 }
+
+
 
 // We take an instance of the database, because we anticipate sometime in the future,
 // running multiple instances of the database.  This feature might not ever be used
@@ -39,7 +41,7 @@ func (d *DB) Init(instance int) {
 
 
 	//dbm.dbProvider(&nm.DBContext{"fctaccounts", config})
-
+/*
 	if len(d.DBHome) == 0 {
 		d.DBHome = fmt.Sprintf("%s%s%03d", types.GetHomeDir(), "/.ValAcc/badger", instance)
 	}
@@ -52,6 +54,8 @@ func (d *DB) Init(instance int) {
 		panic(err)
 	}
 	d.badgerDB = db // And all is good.
+
+ */
 }
 
 // GetKey
@@ -66,6 +70,8 @@ func GetKey(bucket string, key []byte) (CKey []byte) {
 // Look in the given bucket, and return the key found.  Returns nil if no value
 // is found for the given key
 func (d *DB) Get(bucket string, key []byte) (value []byte) {
+	//d.db2.Get()
+	/*
 	CKey := GetKey(bucket, key) // combine the bucket and the key
 
 	// Go look up the CKey, and return any error we might find.
@@ -85,6 +91,8 @@ func (d *DB) Get(bucket string, key []byte) (value []byte) {
 		return nil
 	}
 	// If we didn't find the value, we will return a nil here.
+
+	 */
 	return value
 }
 
@@ -97,13 +105,14 @@ func (d *DB) GetInt32(bucket string, ikey uint32) (value []byte) {
 // Put a key/value in the database.  We return an error if there was a problem
 // writing the key/value pair to the database.
 func (d *DB) Put(bucket string, key []byte, value []byte) error {
-	CKey := GetKey(bucket, key)
+	/*CKey := GetKey(bucket, key)
 
 	// Update the key/value in the database
 	err := d.badgerDB.Update(func(txn *badger.Txn) error {
 		err := txn.Set([]byte(CKey), value)
 		return err
-	})
+	}) */
+	err := fmt.Errorf("barf %x", 1.0);
 	return err
 }
 
