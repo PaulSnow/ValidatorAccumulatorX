@@ -1,4 +1,4 @@
-module github.com/PaulSnow/ValidatorAccumulator/ValAcc
+module github.com/AccumulusNetwork/ValidatorAccumulator/ValAcc
 
 go 1.13
 
