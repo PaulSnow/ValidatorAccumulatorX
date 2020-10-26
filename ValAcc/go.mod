@@ -14,5 +14,5 @@ require (
 	github.com/dgraph-io/badger/v2 v2.2007.1
 	github.com/dustin/go-humanize v1.0.0
 	github.com/sirupsen/logrus v1.6.0 // indirect
-	github.com/tendermint/tm-db v0.6.2
+	github.com/tendermint/tm-db v0.6.2 
 )
