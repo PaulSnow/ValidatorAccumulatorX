@@ -1,7 +1,7 @@
 package merkleDag
 
 import (
-	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
+	"github.com/AccumulusNetwork/ValidatorAccumulator/ValAcc/types"
 )
 
 type ReceiptNode struct {

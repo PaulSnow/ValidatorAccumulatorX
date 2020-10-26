@@ -7,10 +7,10 @@ import (
 
 	"github.com/dustin/go-humanize"
 
-	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/accumulator"
-	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/database"
-	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/node"
-	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
+	"github.com/AccumulusNetwork/ValidatorAccumulator/ValAcc/accumulator"
+	"github.com/AccumulusNetwork/ValidatorAccumulator/ValAcc/database"
+	"github.com/AccumulusNetwork/ValidatorAccumulator/ValAcc/node"
+	"github.com/AccumulusNetwork/ValidatorAccumulator/ValAcc/types"
 )
 
 // The router is used to configure a set of accumulators to distribute the construction of merkle DAGs.  Here

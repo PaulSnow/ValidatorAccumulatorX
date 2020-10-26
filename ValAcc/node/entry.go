@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
+	"github.com/AccumulusNetwork/ValidatorAccumulator/ValAcc/types"
 )
 
 // ANode

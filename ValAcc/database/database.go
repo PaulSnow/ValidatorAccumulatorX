@@ -17,7 +17,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
+	"github.com/AccumulusNetwork/ValidatorAccumulator/ValAcc/types"
 	dbm "github.com/tendermint/tm-db"
 	nm "github.com/tendermint/tendermint/node"
 )

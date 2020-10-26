@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
+	"github.com/AccumulusNetwork/ValidatorAccumulator/ValAcc/types"
 )
 
 func TestEntry(t *testing.T) {
