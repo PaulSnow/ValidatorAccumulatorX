@@ -1,6 +1,6 @@
 package merkleDag
 
-import "github.com/AccumulusNetwork/ValidatorAccumulator/ValAcc/types"
+import "github.com/AccumulateNetwork/ValidatorAccumulator/ValAcc/types"
 
 type MDNode struct {
 	Type           uint8        // Type of data in this chain, drives validation

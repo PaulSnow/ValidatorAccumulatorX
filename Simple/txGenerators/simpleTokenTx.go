@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/AccumulusNetwork/ValidatorAccumulator/Simple/accumulator"
+	"github.com/AccumulateNetwork/ValidatorAccumulator/Simple/accumulator"
 )
 
 const maxaddresses = 100000

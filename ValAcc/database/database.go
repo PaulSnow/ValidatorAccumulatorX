@@ -14,7 +14,7 @@ package database
 // see ValAcc/types/types.go for the constants for bucket names
 
 import (
-	"github.com/AccumulusNetwork/ValidatorAccumulator/ValAcc/types"
+	"github.com/AccumulateNetwork/ValidatorAccumulator/ValAcc/types"
 	dbm "github.com/tendermint/tm-db"
 )
 

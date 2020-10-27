@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/AccumulusNetwork/ValidatorAccumulator/Simple/accumulator"
-	"github.com/AccumulusNetwork/ValidatorAccumulator/Simple/txGenerators"
+	"github.com/AccumulateNetwork/ValidatorAccumulator/Simple/accumulator"
+	"github.com/AccumulateNetwork/ValidatorAccumulator/Simple/txGenerators"
 
 	"github.com/dustin/go-humanize"
 )

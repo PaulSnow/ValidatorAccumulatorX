@@ -4,7 +4,7 @@ import (
 	"crypto/ed25519"
 	"crypto/sha256"
 
-	"github.com/AccumulusNetwork/ValidatorAccumulator/ValAcc/types"
+	"github.com/AccumulateNetwork/ValidatorAccumulator/ValAcc/types"
 )
 
 type walletEntry struct {

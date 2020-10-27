@@ -7,12 +7,12 @@ import (
 	"math/rand"
 	"time"
 
-	router2 "github.com/AccumulusNetwork/ValidatorAccumulator/ValAcc/router"
+	router2 "github.com/AccumulateNetwork/ValidatorAccumulator/ValAcc/router"
 
 	"github.com/dustin/go-humanize"
 
-	"github.com/AccumulusNetwork/ValidatorAccumulator/ValAcc/node"
-	"github.com/AccumulusNetwork/ValidatorAccumulator/ValAcc/types"
+	"github.com/AccumulateNetwork/ValidatorAccumulator/ValAcc/node"
+	"github.com/AccumulateNetwork/ValidatorAccumulator/ValAcc/types"
 )
 
 const help = "\n\nUsage:     VarAcc [ Entry Limit [ChainsInBlock Limit  [tps Limit] ]\n" +
