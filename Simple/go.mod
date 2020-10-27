@@ -1,4 +1,4 @@
-module github.com/AccumulusNetwork/ValidatorAccumulator/Simple
+module github.com/AccumulateNetwork/ValidatorAccumulator/Simple
 
 go 1.13
 
