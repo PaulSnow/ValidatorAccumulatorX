@@ -6,11 +6,11 @@ import (
 	"time"
 
 	"github.com/dustin/go-humanize"
-
-	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/accumulator"
-	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/database"
-	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/node"
-	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
+	"github.com/AccumulateNetwork/ValidatorAccumulator/ValAcc/accumulator"
+	"github.com/AccumulateNetwork/ValidatorAccumulator/ValAcc/database"
+	"github.com/AccumulateNetwork/ValidatorAccumulator/ValAcc/node"
+	"github.com/AccumulateNetwork/ValidatorAccumulator/ValAcc/types"
+	dbm "github.com/tendermint/tm-db"
 )
 
 // The router is used to configure a set of accumulators to distribute the construction of merkle DAGs.  Here
@@ -72,10 +72,24 @@ func (r *Router) Init(entryHashStream chan node.EntryHash, NumAccumulator int) {
 		acc := new(accumulator.Accumulator)
 		r.ACCs = append(r.ACCs, acc)
 		db := new(database.DB)
+        //creat tendermint database
+		str := fmt.Sprintf("accumulator_%d.db", i);
+		//badger requires go build -tags badgerdb
+		//tmDB, err := dbm.NewDB(str,dbm.BadgerDBBackend,str)
+		//tmDB, err := dbm.NewDB(str,dbm.CLevelDBBackend,str)
+		//tmDB, err := dbm.NewDB(str,dbm.MemDBBackend,str)
+		tmDB, err := dbm.NewDB(str,dbm.GoLevelDBBackend,str)
+		if err != nil {
+			fmt.Errorf("failed to create accumulator database: %w", err)
+			return
+		}
+
 		r.DBs = append(r.DBs, db)
-		db.Init(i)
+		db.InitDB(tmDB)
+
 		chainID := types.Hash(sha256.Sum256([]byte(fmt.Sprintf("Accumulator %d", i))))
-		entryFeed, control, mdHashes := acc.Init(db, &chainID)
+
+		entryFeed, control, mdHashes := acc.Init(r.DBs[i], &chainID)
 		r.EntryFeeds = append(r.EntryFeeds, entryFeed)
 		r.Controls = append(r.Controls, control)
 		r.MDFeeds = append(r.MDFeeds, mdHashes)

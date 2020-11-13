@@ -5,8 +5,6 @@ import (
 	"io/ioutil"
 	"os"
 	"testing"
-
-	"github.com/dgraph-io/badger/v2"
 )
 
 func TestDatabase(t *testing.T) {

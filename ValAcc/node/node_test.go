@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/database"
+	"github.com/AccumulateNetwork/ValidatorAccumulator/ValAcc/database"
 
-	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
+	"github.com/AccumulateNetwork/ValidatorAccumulator/ValAcc/types"
 )
 
 // GetTestNode

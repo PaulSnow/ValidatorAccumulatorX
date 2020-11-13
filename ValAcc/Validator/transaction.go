@@ -9,7 +9,7 @@ import (
 	"crypto/sha256"
 	"runtime/debug"
 
-	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
+	"github.com/AccumulateNetwork/ValidatorAccumulator/ValAcc/types"
 )
 
 var _ = debug.PrintStack

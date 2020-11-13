@@ -8,11 +8,11 @@ import (
 
 	"github.com/FactomProject/factomd/util/atomic"
 
-	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/database"
+	"github.com/AccumulateNetwork/ValidatorAccumulator/ValAcc/database"
 
-	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/merkleDag"
-	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/node"
-	"github.com/PaulSnow/ValidatorAccumulator/ValAcc/types"
+	"github.com/AccumulateNetwork/ValidatorAccumulator/ValAcc/merkleDag"
+	"github.com/AccumulateNetwork/ValidatorAccumulator/ValAcc/node"
+	"github.com/AccumulateNetwork/ValidatorAccumulator/ValAcc/types"
 )
 
 // Accumulator
