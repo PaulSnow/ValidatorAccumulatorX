@@ -11,8 +11,8 @@ require (
 	github.com/FactomProject/go-bip32 v0.3.5 // indirect
 	github.com/FactomProject/go-bip39 v0.3.5 // indirect
 	github.com/btcsuitereleases/btcutil v0.0.0-20150612230727-f2b1058a8255 // indirect
-	github.com/dgraph-io/badger/v2 v2.2007.1
+	github.com/dgraph-io/badger/v2 v2.2007.2
 	github.com/dustin/go-humanize v1.0.0
 	github.com/sirupsen/logrus v1.6.0 // indirect
-	github.com/tendermint/tm-db v0.6.2 
+	github.com/tendermint/tm-db v0.6.3
 )

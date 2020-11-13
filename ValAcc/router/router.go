@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/dustin/go-humanize"
 	"github.com/AccumulateNetwork/ValidatorAccumulator/ValAcc/accumulator"
 	"github.com/AccumulateNetwork/ValidatorAccumulator/ValAcc/database"
 	"github.com/AccumulateNetwork/ValidatorAccumulator/ValAcc/node"
@@ -72,9 +73,12 @@ func (r *Router) Init(entryHashStream chan node.EntryHash, NumAccumulator int) {
 		r.ACCs = append(r.ACCs, acc)
 		db := new(database.DB)
         //creat tendermint database
-		str := fmt.Sprintf("accumulator_%d", i);
-		dir := str + ".db"
-		tmDB, err := dbm.NewDB(str,dbm.BadgerDBBackend,dir)
+		str := fmt.Sprintf("accumulator_%d.db", i);
+		//badger requires go build -tags badgerdb
+		//tmDB, err := dbm.NewDB(str,dbm.BadgerDBBackend,str)
+		//tmDB, err := dbm.NewDB(str,dbm.CLevelDBBackend,str)
+		//tmDB, err := dbm.NewDB(str,dbm.MemDBBackend,str)
+		tmDB, err := dbm.NewDB(str,dbm.GoLevelDBBackend,str)
 		if err != nil {
 			fmt.Errorf("failed to create accumulator database: %w", err)
 			return
