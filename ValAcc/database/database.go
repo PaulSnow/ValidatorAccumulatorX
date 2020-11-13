@@ -32,8 +32,8 @@ func (d *DB) InitDB(db dbm.DB) {
     d.db2 = db
 }
 
-func (d *DB) Init(instance int) {
-}
+//func (d *DB) Init(instance int) {
+//}
 
 // GetKey
 // Given a bucket and a key, return the combined key
