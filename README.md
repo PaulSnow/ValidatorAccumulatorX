@@ -11,7 +11,7 @@ a time.  The goal was originally to spread out the overhead of creating merkle t
 would not be a huge cpu demand at the end of a block.
 
 Turns out the algorithm is very simple and flexible.  There is no database integration in this code, just exploring 
-what can be done with Merkle Trees
+what can be done with Merkle Trees.
 
 ## ValAcc
 
@@ -23,7 +23,7 @@ Cryptographic proofs for sets of data can be exported outside the ValAcc, and us
 without access to all the data held within the ValAcc itself.
 
 Use cases include digital identities, IoT security, Supply Chain, Digital Rights Management, Document Management,
-Loan Origination, Tokenization, Smart Contracts, and pretty much anyting else that can be done on a blockchain.
+Loan Origination, Tokenization, Smart Contracts, and pretty much anything else that can be done on a blockchain.
 
 The ValAcc is intended to be run on top of the Factom Protocol, and used to extend the use cases that can be
 built on the Factom Protocol.
